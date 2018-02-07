@@ -1,5 +1,5 @@
 # orm/mapper.py
-# Copyright (C) 2005-2017 the SQLAlchemy authors and contributors
+# Copyright (C) 2005-2018 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -1143,6 +1143,7 @@ class Mapper(InspectionAttr):
         self.inherits._inheriting_mappers.append(self)
         self.passive_updates = self.inherits.passive_updates
         self._all_tables = self.inherits._all_tables
+
         for key, prop in mapper._props.items():
             if key not in self._props and \
                 not self._should_exclude(key, key, local=False,
@@ -1242,6 +1243,10 @@ class Mapper(InspectionAttr):
         event.listen(manager, 'init', _event_on_init, raw=True)
 
         for key, method in util.iterate_attributes(self.class_):
+            if key == '__init__' and hasattr(method, '_sa_original_init'):
+                method = method._sa_original_init
+                if isinstance(method, types.MethodType):
+                    method = method.im_func
             if isinstance(method, types.FunctionType):
                 if hasattr(method, '__sa_reconstructor__'):
                     self._reconstructor = method
@@ -2505,7 +2510,7 @@ class Mapper(InspectionAttr):
         else:
             return True
 
-    def identity_key_from_row(self, row, adapter=None):
+    def identity_key_from_row(self, row, identity_token=None, adapter=None):
         """Return an identity-map key for use in storing/retrieving an
         item from the identity map.
 
@@ -2521,16 +2526,16 @@ class Mapper(InspectionAttr):
             pk_cols = [adapter.columns[c] for c in pk_cols]
 
         return self._identity_class, \
-            tuple(row[column] for column in pk_cols)
+            tuple(row[column] for column in pk_cols), identity_token
 
-    def identity_key_from_primary_key(self, primary_key):
+    def identity_key_from_primary_key(self, primary_key, identity_token=None):
         """Return an identity-map key for use in storing/retrieving an
         item from an identity map.
 
         :param primary_key: A list of values indicating the identifier.
 
         """
-        return self._identity_class, tuple(primary_key)
+        return self._identity_class, tuple(primary_key), identity_token
 
     def identity_key_from_instance(self, instance):
         """Return the identity key for the given instance, based on
@@ -2545,17 +2550,18 @@ class Mapper(InspectionAttr):
         attribute name `key`.
 
         """
-        return self.identity_key_from_primary_key(
-            self.primary_key_from_instance(instance))
+        state = attributes.instance_state(instance)
+        return self._identity_key_from_state(state, attributes.PASSIVE_OFF)
 
-    def _identity_key_from_state(self, state):
+    def _identity_key_from_state(
+            self, state, passive=attributes.PASSIVE_RETURN_NEVER_SET):
         dict_ = state.dict
         manager = state.manager
         return self._identity_class, tuple([
-            manager[self._columntoproperty[col].key].
-            impl.get(state, dict_, attributes.PASSIVE_RETURN_NEVER_SET)
-            for col in self.primary_key
-        ])
+            manager[prop.key].
+            impl.get(state, dict_, passive)
+            for prop in self._identity_key_props
+        ]), state.identity_token
 
     def primary_key_from_instance(self, instance):
         """Return the list of primary key values for the given
@@ -2568,17 +2574,9 @@ class Mapper(InspectionAttr):
 
         """
         state = attributes.instance_state(instance)
-        return self._primary_key_from_state(state, attributes.PASSIVE_OFF)
-
-    def _primary_key_from_state(
-            self, state, passive=attributes.PASSIVE_RETURN_NEVER_SET):
-        dict_ = state.dict
-        manager = state.manager
-        return [
-            manager[prop.key].
-            impl.get(state, dict_, passive)
-            for prop in self._identity_key_props
-        ]
+        identity_key = self._identity_key_from_state(
+            state, attributes.PASSIVE_OFF)
+        return identity_key[1]
 
     @_memoized_configured_property
     def _identity_key_props(self):
@@ -2706,11 +2704,44 @@ class Mapper(InspectionAttr):
             cols.extend(props[key].columns)
         return sql.select(cols, cond, use_labels=True)
 
-    @_memoized_configured_property
+    def _iterate_to_target_viawpoly(self, mapper):
+        if self.isa(mapper):
+            prev = self
+            for m in self.iterate_to_root():
+                yield m
+
+                if m is not prev and prev not in \
+                        m._with_polymorphic_mappers:
+                    break
+
+                prev = m
+                if m is mapper:
+                    break
+
+    def _should_selectin_load(self, enabled_via_opt, polymorphic_from):
+        if not enabled_via_opt:
+            # common case, takes place for all polymorphic loads
+            mapper = polymorphic_from
+            for m in self._iterate_to_target_viawpoly(mapper):
+                if m.polymorphic_load == 'selectin':
+                    return m
+        else:
+            # uncommon case, selectin load options were used
+            enabled_via_opt = set(enabled_via_opt)
+            enabled_via_opt_mappers = {e.mapper: e for e in enabled_via_opt}
+            for entity in enabled_via_opt.union([polymorphic_from]):
+                mapper = entity.mapper
+                for m in self._iterate_to_target_viawpoly(mapper):
+                    if m.polymorphic_load == 'selectin' or \
+                            m in enabled_via_opt_mappers:
+                        return enabled_via_opt_mappers.get(m, m)
+
+        return None
+
     @util.dependencies(
         "sqlalchemy.ext.baked",
         "sqlalchemy.orm.strategy_options")
-    def _subclass_load_via_in(self, baked, strategy_options):
+    def _subclass_load_via_in(self, baked, strategy_options, entity):
         """Assemble a BakedQuery that can load the columns local to
         this subclass as a SELECT with IN.
 
@@ -2722,8 +2753,8 @@ class Mapper(InspectionAttr):
         keep_props = set(
             [polymorphic_prop] + self._identity_key_props)
 
-        disable_opt = strategy_options.Load(self)
-        enable_opt = strategy_options.Load(self)
+        disable_opt = strategy_options.Load(entity)
+        enable_opt = strategy_options.Load(entity)
 
         for prop in self.attrs:
             if prop.parent is self or prop in keep_props:
@@ -2747,11 +2778,22 @@ class Mapper(InspectionAttr):
         else:
             in_expr = self.primary_key[0]
 
-        q = baked.BakedQuery(
-            self._compiled_cache,
-            lambda session: session.query(self),
-            (self, )
-        )
+        if entity.is_aliased_class:
+            assert entity.mapper is self
+            q = baked.BakedQuery(
+                self._compiled_cache,
+                lambda session: session.query(entity).
+                select_entity_from(entity.selectable)._adapt_all_clauses(),
+                (self, )
+            )
+            q.spoil()
+        else:
+            q = baked.BakedQuery(
+                self._compiled_cache,
+                lambda session: session.query(self),
+                (self, )
+            )
+
         q += lambda q: q.filter(
             in_expr.in_(
                 sql.bindparam('primary_keys', expanding=True)
@@ -2759,6 +2801,10 @@ class Mapper(InspectionAttr):
         ).order_by(*self.primary_key)
 
         return q, enable_opt, disable_opt
+
+    @_memoized_configured_property
+    def _subclass_load_via_in_mapper(self):
+        return self._subclass_load_via_in(self)
 
     def cascade_iterator(self, type_, state, halt_on=None):
         """Iterate each element and its mapper in an object graph,
@@ -2823,20 +2869,7 @@ class Mapper(InspectionAttr):
 
     @_memoized_configured_property
     def _compiled_cache(self):
-        return util.LRUCache(self._compiled_cache_size,
-                             size_alert=self._alert_lru_cache_limit)
-
-    def _alert_lru_cache_limit(self, lru_cache):
-        util.warn(
-            "Compiled statement cache for mapper %s is "
-            "reaching its size threshold of %d, based on _compiled_cache_size "
-            "of %d.  Please refer to "
-            "http://docs.sqlalchemy.org/en/latest/faq/performance.html"
-            "#faq_compiled_cache_threshold"
-            " for best practices." %
-            (self,
-             lru_cache.size_threshold,
-             self._compiled_cache_size))
+        return util.LRUCache(self._compiled_cache_size)
 
     @_memoized_configured_property
     def _sorted_tables(self):
@@ -3013,6 +3046,12 @@ def reconstructor(fn):
     contain the first element.  ORM state changes made to objects at
     this stage will not be recorded for the next flush() operation, so
     the activity within a reconstructor should be conservative.
+
+    .. seealso::
+
+        :ref:`mapping_constructors`
+
+        :meth:`.InstanceEvents.load`
 
     """
     fn.__sa_reconstructor__ = True

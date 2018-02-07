@@ -14,6 +14,7 @@ from sqlalchemy import testing
 from sqlalchemy.testing.schema import Table, Column
 from sqlalchemy.testing.mock import Mock, call
 from sqlalchemy.testing.assertions import expect_warnings
+from sqlalchemy.ext.declarative import declarative_base
 
 
 class DictCollection(dict):
@@ -600,8 +601,9 @@ class SetTest(_CollectionOperations):
             self.assert_((p1.children > other) == (control > other))
             self.assert_((p1.children >= other) == (control >= other))
 
+    @testing.requires.python_fixed_issue_8743
     def test_set_comparison_empty_to_empty(self):
-        # test issue #3265 which appears to be python 2.6 specific
+        # test issue #3265 which was fixed in Python version 2.7.8
         Parent = self.Parent
 
         p1 = Parent('P1')
@@ -1280,6 +1282,10 @@ class ComparatorTest(fixtures.MappedTest, AssertsCompiledSQL):
             # nonuselist -> nonuselist
             user = association_proxy('user_keyword', 'user')
 
+            # uselist assoc_proxy -> collection -> assoc_proxy -> scalar object
+            # (o2m relationship, associationproxy(m2o relationship, m2o relationship))
+            singulars = association_proxy("user_keywords", "singular")
+
         class UserKeyword(cls.Comparable):
             def __init__(self, user=None, keyword=None):
                 self.user = user
@@ -1287,6 +1293,8 @@ class ComparatorTest(fixtures.MappedTest, AssertsCompiledSQL):
 
             common_users = association_proxy("keyword", "user")
             keyword_name = association_proxy("keyword", "keyword")
+
+            singular = association_proxy("user", "singular")
 
         class Singular(cls.Comparable):
             def __init__(self, value=None):
@@ -1310,7 +1318,8 @@ class ComparatorTest(fixtures.MappedTest, AssertsCompiledSQL):
             'singular': relationship(Singular)
         })
         mapper(Keyword, keywords, properties={
-            'user_keyword': relationship(UserKeyword, uselist=False)
+            'user_keyword': relationship(UserKeyword, uselist=False),
+            'user_keywords': relationship(UserKeyword)
         })
 
         mapper(UserKeyword, userkeywords, properties={
@@ -1706,6 +1715,40 @@ class ComparatorTest(fixtures.MappedTest, AssertsCompiledSQL):
         )
         self._equivalent(q1, q2)
 
+    def test_filter_contains_chained_any_to_has_to_eq(self):
+        User = self.classes.User
+        Keyword = self.classes.Keyword
+        UserKeyword = self.classes.UserKeyword
+        Singular = self.classes.Singular
+
+        singular = self.session.query(Singular).order_by(Singular.id).first()
+
+        q1 = self.session.query(Keyword).filter(
+            Keyword.singulars.contains(singular)
+        )
+        self.assert_compile(
+            q1,
+            "SELECT keywords.id AS keywords_id, "
+            "keywords.keyword AS keywords_keyword, "
+            "keywords.singular_id AS keywords_singular_id "
+            "FROM keywords "
+            "WHERE EXISTS (SELECT 1 "
+            "FROM userkeywords "
+            "WHERE keywords.id = userkeywords.keyword_id AND "
+            "(EXISTS (SELECT 1 "
+            "FROM users "
+            "WHERE users.id = userkeywords.user_id AND "
+            ":param_1 = users.singular_id)))",
+            checkparams={"param_1": singular.id}
+        )
+
+        q2 = self.session.query(Keyword).filter(
+            Keyword.user_keywords.any(
+                UserKeyword.user.has(User.singular == singular)
+            )
+        )
+        self._equivalent(q1, q2)
+
     def test_has_criterion_nul(self):
         # but we don't allow that with any criterion...
         User = self.classes.User
@@ -1845,6 +1888,31 @@ class DictOfTupleUpdateTest(fixtures.TestBase):
             a1.elements.update,
             (("B", 3), 'elem2'), (("C", 4), "elem3")
         )
+
+
+class AttributeAccessTest(fixtures.TestBase):
+    def test_resolve_aliased_class(self):
+        Base = declarative_base()
+
+        class A(Base):
+            __tablename__ = 'a'
+            id = Column(Integer, primary_key=True)
+            value = Column(String)
+
+        class B(Base):
+            __tablename__ = 'b'
+            id = Column(Integer, primary_key=True)
+            a_id = Column(Integer, ForeignKey(A.id))
+            a = relationship(A)
+            a_value = association_proxy('a', 'value')
+
+        spec = aliased(B).a_value
+
+        is_(spec.owning_class, B)
+
+        spec = B.a_value
+
+        is_(spec.owning_class, B)
 
 
 class InfoTest(fixtures.TestBase):

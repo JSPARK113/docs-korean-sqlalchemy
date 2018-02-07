@@ -1,5 +1,5 @@
 # ext/associationproxy.py
-# Copyright (C) 2005-2017 the SQLAlchemy authors and contributors
+# Copyright (C) 2005-2018 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -19,6 +19,7 @@ import weakref
 from .. import exc, orm, util
 from ..orm import collections, interfaces
 from ..sql import not_, or_
+from .. import inspect
 
 
 def association_proxy(target_collection, attr, **kw):
@@ -245,7 +246,17 @@ class AssociationProxy(interfaces.InspectionAttrInfo):
 
     def __get__(self, obj, class_):
         if self.owning_class is None:
-            self.owning_class = class_ and class_ or type(obj)
+            try:
+                insp = inspect(class_)
+            except exc.NoInspectionAvailable:
+                pass
+            else:
+                if hasattr(insp, 'mapper'):
+                    self.owning_class = insp.mapper.class_
+
+            if self.owning_class is None:
+                self.owning_class = type(obj)
+
         if obj is None:
             return self
 
@@ -451,6 +462,7 @@ class AssociationProxy(interfaces.InspectionAttrInfo):
         if target_assoc is not None:
             return self._comparator._criterion_exists(
                 target_assoc.contains(obj)
+                if not target_assoc.scalar else target_assoc == obj
             )
         elif self._target_is_object and self.scalar and \
                 not self._value_is_scalar:

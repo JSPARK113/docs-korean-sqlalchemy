@@ -1,5 +1,5 @@
 # engine/__init__.py
-# Copyright (C) 2005-2017 the SQLAlchemy authors and contributors
+# Copyright (C) 2005-2018 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -381,6 +381,10 @@ def create_engine(*args, **kwargs):
         activity is detected on a connection for eight hours (although
         this is configurable with the MySQLDB connection itself and the
         server configuration as well).
+
+        .. seealso::
+
+            :ref:`pool_setting_recycle`
 
     :param pool_reset_on_return='rollback': set the "reset on return"
         behavior of the pool, which is whether ``rollback()``,
