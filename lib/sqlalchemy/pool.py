@@ -1,5 +1,5 @@
 # sqlalchemy/pool.py
-# Copyright (C) 2005-2017 the SQLAlchemy authors and contributors
+# Copyright (C) 2005-2018 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -1176,7 +1176,7 @@ class QueuePool(Pool):
                 raise exc.TimeoutError(
                     "QueuePool limit of size %d overflow %d reached, "
                     "connection timed out, timeout %d" %
-                    (self.size(), self.overflow(), self._timeout))
+                    (self.size(), self.overflow(), self._timeout), code="3o7r")
 
         if self._inc_overflow():
             try:

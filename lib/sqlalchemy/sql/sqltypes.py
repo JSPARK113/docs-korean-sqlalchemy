@@ -1,5 +1,5 @@
 # sql/sqltypes.py
-# Copyright (C) 2005-2017 the SQLAlchemy authors and contributors
+# Copyright (C) 2005-2018 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -1352,14 +1352,17 @@ class Enum(Emulated, String, SchemaType):
         self.enums = list(values)
 
         self._valid_lookup = dict(
-            zip(objects, values)
+            zip(reversed(objects), reversed(values))
         )
+
         self._object_lookup = dict(
-            (value, key) for key, value in self._valid_lookup.items()
+            zip(values, objects)
         )
-        self._valid_lookup.update(
-            [(value, value) for value in self._valid_lookup.values()]
-        )
+
+        self._valid_lookup.update([
+            (value, self._valid_lookup[self._object_lookup[value]])
+            for value in values
+        ])
 
     @property
     def native(self):
@@ -2410,6 +2413,8 @@ class ARRAY(SchemaEventTarget, Indexable, Concatenable, TypeEngine):
 
     def _set_parent_with_dispatch(self, parent):
         """Support SchemaEventTarget"""
+
+        super(ARRAY, self)._set_parent_with_dispatch(parent)
 
         if isinstance(self.item_type, SchemaEventTarget):
             self.item_type._set_parent_with_dispatch(parent)

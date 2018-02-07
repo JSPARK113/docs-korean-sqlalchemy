@@ -1,5 +1,5 @@
 # postgresql/base.py
-# Copyright (C) 2005-2017 the SQLAlchemy authors and contributors
+# Copyright (C) 2005-2018 the SQLAlchemy authors and contributors
 # <see AUTHORS file>
 #
 # This module is part of SQLAlchemy and is released under
@@ -925,7 +925,7 @@ from sqlalchemy.types import INTEGER, BIGINT, SMALLINT, VARCHAR, \
 
 AUTOCOMMIT_REGEXP = re.compile(
     r'\s*(?:UPDATE|INSERT|CREATE|DELETE|DROP|ALTER|GRANT|REVOKE|'
-    'IMPORT FOREIGN SCHEMA|REFRESH MATERIALIZED VIEW)',
+    'IMPORT FOREIGN SCHEMA|REFRESH MATERIALIZED VIEW|TRUNCATE)',
     re.I | re.UNICODE)
 
 RESERVED_WORDS = set(
@@ -971,6 +971,16 @@ PGCidr = CIDR
 class MACADDR(sqltypes.TypeEngine):
     __visit_name__ = "MACADDR"
 PGMacAddr = MACADDR
+
+
+class MONEY(sqltypes.TypeEngine):
+
+    """Provide the PostgreSQL MONEY type.
+
+    .. versionadded:: 1.2
+
+    """
+    __visit_name__ = "MONEY"
 
 
 class OID(sqltypes.TypeEngine):
@@ -1362,6 +1372,7 @@ ischema_names = {
     'bit': BIT,
     'bit varying': BIT,
     'macaddr': MACADDR,
+    'money': MONEY,
     'oid': OID,
     'double precision': DOUBLE_PRECISION,
     'timestamp': TIMESTAMP,
@@ -1636,6 +1647,23 @@ class PGCompiler(compiler.SQLCompiler):
 
         return 'ON CONFLICT %s DO UPDATE SET %s' % (target_text, action_text)
 
+    def update_from_clause(self, update_stmt,
+                           from_table, extra_froms,
+                           from_hints,
+                           **kw):
+        return "FROM " + ', '.join(
+            t._compiler_dispatch(self, asfrom=True,
+                                 fromhints=from_hints, **kw)
+            for t in extra_froms)
+
+    def delete_extra_from_clause(self, delete_stmt, from_table,
+                           extra_froms, from_hints, **kw):
+        """Render the DELETE .. USING clause specific to PostgresSQL."""
+        return "USING " + ', '.join(
+            t._compiler_dispatch(self, asfrom=True,
+                                 fromhints=from_hints, **kw)
+            for t in extra_froms)
+
 
 class PGDDLCompiler(compiler.DDLCompiler):
 
@@ -1830,6 +1858,9 @@ class PGTypeCompiler(compiler.GenericTypeCompiler):
 
     def visit_MACADDR(self, type_, **kw):
         return "MACADDR"
+
+    def visit_MONEY(self, type_, **kw):
+        return "MONEY"
 
     def visit_OID(self, type_, **kw):
         return "OID"
