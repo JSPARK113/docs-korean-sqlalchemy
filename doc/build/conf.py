@@ -11,8 +11,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
+import sys
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -20,9 +20,6 @@ import os
 sys.path.insert(0, os.path.abspath('../../lib'))
 sys.path.insert(0, os.path.abspath('../..')) # examples
 sys.path.insert(0, os.path.abspath('.'))
-
-import sqlalchemy
-
 
 # -- General configuration -----------------------------------------------------
 
@@ -209,9 +206,9 @@ html_last_updated_fmt = '%m/%d/%Y %H:%M:%S'
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
-html_additional_pages = {
-    "notfound": "notfound.html"
-}
+# html_additional_pages = {
+#    "notfound": "notfound.html"
+# }
 
 # If false, no module index is generated.
 html_domain_indices = False

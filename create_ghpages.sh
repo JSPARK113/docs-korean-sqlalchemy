@@ -9,7 +9,7 @@ git checkout -B gh-pages
 git rebase docs-korean
 
 touch .nojekyll
-#echo '!doc/build/_build' >> .gitignore
+echo '!doc/build/output' >> .gitignore
 
 cd doc/build
 make html
