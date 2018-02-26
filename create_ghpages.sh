@@ -15,8 +15,6 @@ cd doc/build
 make html
 cd ../..
 
-find . -name *.exe -delete
-
 git add . -A
 git commit -m "build"
 git push -f origin gh-pages
