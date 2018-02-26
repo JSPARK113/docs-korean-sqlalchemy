@@ -13,17 +13,17 @@ SQLAlchemy 문서
 
 :doc:`개요 <intro_ko>` |
 :ref:`설치 가이드 <installation_ko>` |
-:doc:`자주 물어보는 질문 <faq/index>` |
+:doc:`자주 물어보는 질문 <faq/index_ko>` |
 :doc:`1.1에서 마이그레이션 하기 <changelog/migration_12>` |
-:doc:`용어집 <glossary>` |
-:doc:`오류 메세지 <errors>` |
-:doc:`체인지로그 목록 <changelog/index>`
+:doc:`용어집 <glossary_ko>` |
+:doc:`오류 메세지 <errors_ko>` |
+:doc:`체인지로그 목록 <changelog/index_ko>`
 
 SQLAlchemy ORM
 ==============
 
 여기에서는 Object Relational Mapper를 소개하고 자세하게 설명한다.
-자동으로 생성는 상위 수준의 SQL과 파이썬 객체의 자동 기록 기능을 사용하고 싶으면
+자동으로 생성되는 상위 수준 SQL과 파이썬 객체의 자동 기록 기능을 사용하고 싶으면
 이 섹션의 튜토리얼부터 진행한다.
 
 * **Read this first:**

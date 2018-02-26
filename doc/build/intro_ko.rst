@@ -1,5 +1,5 @@
-.. _overview_toplevel_ko:
-.. _overview_ko:
+.. _overview_toplevel:
+.. _overview:
 
 ========
 개요
@@ -18,7 +18,7 @@ SQLAlchemy SQL Toolkit과 Object Relational Mapper는
 사용할 수 있다. ORM을 사용할 때, SQL 표현식 언어는 객체 관계형 구성과 쿼리에서 사용되기 때문에
 공개적인 대면 API의 일부로 남아있다.
 
-.. _doc_overview_ko:
+.. _doc_overview:
 
 도큐먼테이션 개요
 ======================
@@ -50,7 +50,7 @@ SQL 표현 언어는 ORM 패키지 특유의 독립적인 툴킷이며 ORM 패�
 또한 wiki에 ORM과 핵심 SQLAlchemy를 모두 포함하는 다양한 예제들이 있다.
 `Theatrum Chemicum <http://www.sqlalchemy.org/trac/wiki/UsageRecipes>`_\ 를 참고하라.
 
-.. _installation_ko:
+.. _installation:
 
 설치 가이드
 ==================
@@ -107,7 +107,7 @@ setup.py를 사용한 설치
 
     python setup.py install
 
-.. _c_extensions_ko:
+.. _c_extensions:
 
 C 확장 설치
 ----------------------------------

@@ -21,5 +21,5 @@ Table of Contents
 Indices and tables
 ------------------
 
-* :ref:`glossary`
+* :ref:`glossary_ko`
 * :ref:`genindex`
