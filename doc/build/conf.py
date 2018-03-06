@@ -164,7 +164,7 @@ html_context = {
     'github_repo': 'docs-korean-sqlalchemy',
     'github_version': 'docs-korean/',
     'display_github': True,
-    'conf_py_path': 'docs/build/',
+    'conf_py_path': 'doc/build/',
     'source_suffix': '.rst',
 }
 

@@ -9,7 +9,7 @@ SQLAlchemy 문서
 시작하기
 ===============
 
-간략히 둘러보기.
+간단한 설명.
 
 :doc:`개요 <intro_ko>` |
 :ref:`설치 가이드 <installation_ko>` |
