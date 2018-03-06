@@ -1,4 +1,4 @@
-.. _contents_ko:
+.. _contents:
 
 Table of Contents
 =================
