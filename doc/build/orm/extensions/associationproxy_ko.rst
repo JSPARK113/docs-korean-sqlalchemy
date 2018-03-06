@@ -1,19 +1,17 @@
 .. _associationproxy_toplevel:
 
-Association Proxy
-=================
+연관 프록시(Association Proxy)
+===================================================
 
 .. module:: sqlalchemy.ext.associationproxy
 
-``associationproxy`` is used to create a read/write view of a
-target attribute across a relationship.  It essentially conceals
-the usage of a "middle" attribute between two endpoints, and
-can be used to cherry-pick fields from a collection of
-related objects or to reduce the verbosity of using the association
-object pattern.   Applied creatively, the association proxy allows
-the construction of sophisticated collections and dictionary
-views of virtually any geometry, persisted to the database using
-standard, transparently configured relational patterns.
+``associationproxy``\ 는
+릴레이션의 타겟 속성을 읽고 쓰기 위한 뷰(view)를 생성하는데 쓰인다.
+두 엔드포인트간의 중간 속성을 감추고 관련된 객체 집합으로부터
+필요한 필드만 뽑아내거나
+연관 객체 패턴을 사용할 때의 불편함을 줄일 수 있다.
+연관 프록시를 잘 적용하면 표준적이며 투명하게 설정한 릴레이션 패턴을 사용하여
+데이터베이스에 대한 집합 또는 사전 형태의 복잡한 뷰를 만들 수 있다.
 
 
 Simplifying Scalar Collections

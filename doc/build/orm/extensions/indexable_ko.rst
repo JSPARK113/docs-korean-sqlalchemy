@@ -1,7 +1,7 @@
 .. _indexable_toplevel:
 
-Indexable
-=========
+인덱서블(Indexable)
+===========================
 
 .. automodule:: sqlalchemy.ext.indexable
 
