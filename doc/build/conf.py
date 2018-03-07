@@ -273,6 +273,8 @@ PREABLE = r"""
 \AtBeginEnvironment{tabular}{\small}
 \AtBeginEnvironment{threeparttable}{\small}
 \AtBeginEnvironment{longtable}{\small}
+\usepackage{enumitem}
+\setlistdepth{9}
 """
 # Documents to append as an appendix to all manuals.
 # latex_appendices = []
