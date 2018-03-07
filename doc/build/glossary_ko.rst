@@ -38,9 +38,10 @@
 
     descriptor
     descriptors
-        In Python, a descriptor is an object attribute with “binding behavior”, one whose attribute access has been overridden by methods in the `descriptor protocol <http://docs.python.org/howto/descriptor.html>`_.
-        Those methods are __get__(), __set__(), and __delete__(). If any of those methods are defined
-        for an object, it is said to be a descriptor.
+        파이선에서 디스크립터는 바인딩 능력을 가지는 특별한 객체 속성을 뜻한다.
+        이 속성에 접근하려면 `descriptor protocol <http://docs.python.org/howto/descriptor.html>`_\ 에
+        따라 __get__(), __set__(), 그리고 __delete__() 메서드를 오버라이드해야 한다.
+        만약 이 메서드가 객체에 정의되어 있으면 디스크립터라고 부른다.
 
         In SQLAlchemy, descriptors are used heavily in order to provide attribute behavior
         on mapped classes.   When a class is mapped as such::
@@ -263,21 +264,18 @@
         	:ref:`pooling_toplevel`
 
     DBAPI
-        DBAPI is shorthand for the phrase "Python Database API
-        Specification".  This is a widely used specification
-        within Python to define common usage patterns for all
-        database connection packages.   The DBAPI is a "low level"
-        API which is typically the lowest level system used
-        in a Python application to talk to a database.  SQLAlchemy's
-        :term:`dialect` system is constructed around the
-        operation of the DBAPI, providing individual dialect
-        classes which service a specific DBAPI on top of a
-        specific database engine; for example, the :func:`.create_engine`
-        URL ``postgresql+psycopg2://@localhost/test``
-        refers to the :mod:`psycopg2 <.postgresql.psycopg2>`
-        DBAPI/dialect combination, whereas the URL ``mysql+mysqldb://@localhost/test``
-        refers to the :mod:`MySQL for Python <.mysql.mysqldb>`
-        DBAPI DBAPI/dialect combination.
+        DBAPI는 "Python Database API Specification"의 줄임말이다.
+        파이썬용 데이터베이스 연결 패키지에서 공통적으로 사용되는 사용 패턴을
+        정의하는 규약이다.
+        DBAPI는 일반적으로 파이썬이 데이터베이스와 통신하기위한
+        가장 낮은 수준의 "저수준" API로 특정 데이터베이스 엔진 위에 만들어진
+        특정한 DBAPI를 서비스하는 개별적인 dialect 클래스를 제공한다.
+        예를 들어
+        :func:`.create_engine` 명령에서
+        URL ``postgresql+psycopg2://@localhost/test``\ 은
+        :mod:`psycopg2 <.postgresql.psycopg2>` DBAPI/dialect 조합을 구성하고
+        URL ``postgresql+psycopg2://@localhost/test``\ 은
+        :mod:`MySQL for Python <.mysql.mysqldb>` DBAPI/dialect 조합을 구성한다.
 
         .. seealso::
 
@@ -285,7 +283,8 @@
 
     domain model
 
-        A domain model in problem solving and software engineering is a conceptual model of all the topics related to a specific problem. It describes the various entities, their attributes, roles, and relationships, plus the constraints that govern the problem domain.
+        문제 해결과 소프트웨어 공학에서 도메인 모델(domain model)은 특정한 문제에 관련딘 모든 주제에 대한 개념적 모형이다.
+        도메인 모델은 문제와 관련된 다양한 개체와 속성, 역할, 관계 그리고 제한 조건을 모두 서술한다.
 
         (via Wikipedia)
 
@@ -294,17 +293,15 @@
             `Domain Model (wikipedia) <http://en.wikipedia.org/wiki/Domain_model>`_
 
     unit of work
-        This pattern is where the system transparently keeps
-        track of changes to objects and periodically flushes all those
-        pending changes out to the database. SQLAlchemy's Session
-        implements this pattern fully in a manner similar to that of
-        Hibernate.
+        이 패턴은 시스템이 객체의 변화를 지속적으로 투명하게 추적하고
+        적용되지 않은 변화를 정기적으로 데이터베이스로 내보낸다.
+        SQLAlchemy의 세션은 이 패턴을 Hibernate와 유사한 방식으로 구현한다.
 
         .. seealso::
 
             `Unit of Work by Martin Fowler <http://martinfowler.com/eaaCatalog/unitOfWork.html>`_
 
-            :doc:`orm/session`
+            :doc:`orm/session_ko`
 
     expire
     expires

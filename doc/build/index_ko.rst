@@ -9,7 +9,7 @@ SQLAlchemy 문서
 시작하기
 ===============
 
-간단한 설명.
+SQLAlchemy에 대한 간단한 설명.
 
 :doc:`개요 <intro_ko>` |
 :ref:`설치 가이드 <installation>` |
@@ -49,7 +49,7 @@ SQLAlchemy ORM
 * **ORM 확장하기:**
   :doc:`ORM 이벤트와 내부 구조 <orm/extending_ko>`
 
-* **Other:**
+* **기타:**
   :doc:`예제 소개 <orm/examples_ko>`
 
 SQLAlchemy 코어

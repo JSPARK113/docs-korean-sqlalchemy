@@ -1,7 +1,7 @@
 .. _engines_toplevel:
 
 ====================
-Engine Configuration
+엔진 설정
 ====================
 
 The :class:`.Engine` is the starting point for any SQLAlchemy application. It's
@@ -52,8 +52,8 @@ See the section :ref:`dialect_toplevel` for information on the various backends 
 
 .. _database_urls:
 
-Database Urls
-=============
+데이터베이스 Url
+==========================
 
 The :func:`.create_engine` function produces an :class:`.Engine` object based
 on a URL.  These URLs follow `RFC-1738
@@ -155,7 +155,7 @@ And for an absolute file path, the three slashes are followed by the absolute pa
 
     #Unix/Mac - 4 initial slashes in total
     engine = create_engine('sqlite:////absolute/path/to/foo.db')
-    #Windows 
+    #Windows
     engine = create_engine('sqlite:///C:\\path\\to\\foo.db')
     #Windows alternative using raw string
     engine = create_engine(r'sqlite:///C:\path\to\foo.db')
