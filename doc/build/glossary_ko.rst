@@ -38,13 +38,14 @@
 
     descriptor
     descriptors
-        파이선에서 디스크립터는 바인딩 능력을 가지는 특별한 객체 속성을 뜻한다.
+    디스크립터
+        파이선에서 디스크립터(descriptor)는 바인딩 능력을 가지는 특별한 객체 속성을 뜻한다.
         이 속성에 접근하려면 `descriptor protocol <http://docs.python.org/howto/descriptor.html>`_\ 에
         따라 __get__(), __set__(), 그리고 __delete__() 메서드를 오버라이드해야 한다.
         만약 이 메서드가 객체에 정의되어 있으면 디스크립터라고 부른다.
 
-        In SQLAlchemy, descriptors are used heavily in order to provide attribute behavior
-        on mapped classes.   When a class is mapped as such::
+        SQLAlchemy에서는 매핑된 클래스에 속성을 주기 위해 디스크립터를 자주 사용한다.
+        예를 들어 클래스가 다음과 같이 매핑되었다고 하자.::
 
             class MyClass(Base):
                 __tablename__ = 'foo'
@@ -52,21 +53,22 @@
                 id = Column(Integer, primary_key=True)
                 data = Column(String)
 
-        The ``MyClass`` class will be :term:`mapped` when its definition
-        is complete, at which point the ``id`` and ``data`` attributes,
-        starting out as :class:`.Column` objects, will be replaced
-        by the :term:`instrumentation` system with instances
-        of :class:`.InstrumentedAttribute`, which are descriptors that
-        provide the above mentioned ``__get__()``, ``__set__()`` and
-        ``__delete__()`` methods.   The :class:`.InstrumentedAttribute`
-        will generate a SQL expression when used at the class level::
+        이 정의가 완료되면 ``MyClass`` 클래스는 매핑(:term:`mapped`)된다.
+        이 시점에서
+        최초에는 :class:`.Column` 객체로 생성되었던 이 클래스의 ``id`` 속성과
+        ``data`` 속성이 인스트루먼트(:term:`instrumentation`) 시스템에 의해
+        :class:`.InstrumentedAttribute` 클래스 인스턴스로 대체된다.
+        이 인스턴수가 위에서 언급한 ``__get__()``, ``__set__()``, ``__delete__()``
+        메서드로 제어가능한 디스트립터이다.
+        The :class:`.InstrumentedAttribute`\ 를 클래스 레벨에서 사용하면
+        다음처럼 SQL 표현식을 생성한다.::
 
             >>> print(MyClass.data == 5)
             data = :data_1
 
-        and at the instance level, keeps track of changes to values,
-        and also :term:`lazy loads` unloaded attributes
-        from the database::
+        만약 인스턴스 레벨에서 사용하면
+        값의 변화를 추적한다.
+        레이지 로드(:term:`lazy loads`) 방식으로 데이터베이스에서 속성을 제거한다.
 
             >>> m1 = MyClass()
             >>> m1.id = 5
@@ -101,15 +103,11 @@
     instrumentation
     instrumented
     instrumenting
-        Instrumentation refers to the process of augmenting the functionality
-        and attribute set of a particular class.   Ideally, the
-        behavior of the class should remain close to a regular
-        class, except that additional behaviors and features are
-        made available.  The SQLAlchemy :term:`mapping` process,
-        among other things, adds database-enabled :term:`descriptors`
-        to a mapped
-        class which each represent a particular database column
-        or relationship to a related class.
+    인스트루먼테이션
+        인스트루먼테이션(Instrumentation)은 특정 클래스의 기능과 속성 집합을 추가하는 것을 말한다.
+        이상적으로는 일반 클래스와 가능한한 달라지지 않으면서 기능과 특징을 추가할 수 있어야 한다.
+        SQLAlchemy 매핑(:term:`mapping`) 과정은 특정 테이블을 대표하도록 맵핑된 클래스에 데이터베이스를 조작할 수 있는
+        그 클래스의 특정 컬럼이나 관련된 클래스의 테이블을 나타내는 디스크립터(:term:`descriptors`)를 추가시킨다.
 
     identity map
         A mapping between Python objects and their database identities.
@@ -132,16 +130,14 @@
     lazy loads
     lazy loaded
     lazy loading
-        In object relational mapping, a "lazy load" refers to an
-        attribute that does not contain its database-side value
-        for some period of time, typically when the object is
-        first loaded.  Instead, the attribute receives a
-        *memoization* that causes it to go out to the database
-        and load its data when it's first used.   Using this pattern,
-        the complexity and time spent within object fetches can
-        sometimes be reduced, in that
-        attributes for related tables don't need to be addressed
-        immediately.
+    지연 로딩
+        객체-관계 매핑에서 "지연 로딩(lazy load)"은 일정 기간동안,
+        예를 들어 처음으로 객체가 로딩될 때까지, 데이터베이스 측의 값을
+        갖지 않는 속성을 말한다.
+        대신 처음으로 사용되는 시점에 데이터베이스에서 값을 가져오도록 하는
+        *메모이제이션*(memoization)을 받는다.
+        이렇게 하면 해당 속성과 관련된 테이블을 즉시 가져올 필요가 없어서
+        객체가 값을 가지올 때 걸리는 시간과 복잡성을 줄일 수 있다.
 
         .. seealso::
 
@@ -153,28 +149,24 @@
 
     mapping
     mapped
-        We say a class is "mapped" when it has been passed through the
-        :func:`.orm.mapper` function.   This process associates the
-        class with a database table or other :term:`selectable`
-        construct, so that instances of it can be persisted
-        using a :class:`.Session` as well as loaded using a
-        :class:`.Query`.
+    매핑
+        클래스를 :func:`.orm.mapper` 함수에 넘기는 것을 매핑(mapping)시킨다고 한다.
+        이렇게 하면 그 클래스를 데이터베이스 테이블이나 기타 셀렉터블(:term:`selectable`)과
+        연관시키게 되고 그 클래스의 객체는 :class:`.Session` 클래스로 값을 유지하거나
+        :class:`.Query` 클래스로 값을 로딩할 수 있다.
 
     N plus one problem
-        The N plus one problem is a common side effect of the
-        :term:`lazy load` pattern, whereby an application wishes
-        to iterate through a related attribute or collection on
-        each member of a result set of objects, where that
-        attribute or collection is set to be loaded via the lazy
-        load pattern.   The net result is that a SELECT statement
-        is emitted to load the initial result set of parent objects;
-        then, as the application iterates through each member,
-        an additional SELECT statement is emitted for each member
-        in order to load the related attribute or collection for
-        that member.  The end result is that for a result set of
-        N parent objects, there will be N + 1 SELECT statements emitted.
+    N 더하기 일 문제
+        N 더하기 일 문제(N plus one problem)는
+        지연 로딩(:term:`lazy load`) 패턴의 일반적 부작용을 말한다.
+        지연 로딩 방식으로 로드된 속성이나 콜렉션안에서 객체의 각
+        멤버에 대해 관련된 속성이나 콜렉션을 모두 흝어야한다.
+        결론적으로 부모 객체의 최초 결과 셋을 SELECT 문으로 로드한 뒤에도
+        결과 하나하나에 대해 추가적으로 SELECT 문을 돌려야 한다.
+        이로 인해 N개의 부모를 가지는 결과 셋을 얻으려면
+        N + 1 개의 SELECT 문을 실행해야 한다.
 
-        The N plus one problem is alleviated using :term:`eager loading`.
+        N 더하기 일 문제는 즉시 로딩(:term:`eager loading`)으로 없앨 수 있다.
 
         .. seealso::
 
@@ -274,7 +266,7 @@
         :func:`.create_engine` 명령에서
         URL ``postgresql+psycopg2://@localhost/test``\ 은
         :mod:`psycopg2 <.postgresql.psycopg2>` DBAPI/dialect 조합을 구성하고
-        URL ``postgresql+psycopg2://@localhost/test``\ 은
+        URL ``mysql+mysqldb://@localhost/test``\ 은
         :mod:`MySQL for Python <.mysql.mysqldb>` DBAPI/dialect 조합을 구성한다.
 
         .. seealso::
@@ -282,8 +274,8 @@
             `PEP 249 - Python Database API Specification v2.0 <http://www.python.org/dev/peps/pep-0249/>`_
 
     domain model
-
-        문제 해결과 소프트웨어 공학에서 도메인 모델(domain model)은 특정한 문제에 관련딘 모든 주제에 대한 개념적 모형이다.
+    도메인 모형
+        문제 해결과 소프트웨어 공학에서 도메인 모형(domain model)은 특정한 문제에 관련딘 모든 주제에 대한 개념적 모형이다.
         도메인 모델은 문제와 관련된 다양한 개체와 속성, 역할, 관계 그리고 제한 조건을 모두 서술한다.
 
         (via Wikipedia)
