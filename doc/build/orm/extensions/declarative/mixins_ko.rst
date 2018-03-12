@@ -1,20 +1,18 @@
 .. _declarative_mixins:
 
-Mixin and Custom Base Classes
-=============================
+믹스인(Mixin)과 커스텀 베이스 클래스
+==========================================================
 
-A common need when using :mod:`~sqlalchemy.ext.declarative` is to
-share some functionality, such as a set of common columns, some common
-table options, or other mapped properties, across many
-classes.  The standard Python idioms for this is to have the classes
-inherit from a base which includes these common features.
+:mod:`~sqlalchemy.ext.declarative` 모듈 사용시에
+복수의 클래스가 공통 열 혹은 공통 옵션을 가지는 등
+몇몇 기능을 공유해야 할 때가 있다.
+이 때 파이썬다운 방법은 공통 기능을 가진 베이스 클래스에서 상속을 받는 것이다.
 
-When using :mod:`~sqlalchemy.ext.declarative`, this idiom is allowed
-via the usage of a custom declarative base class, as well as a "mixin" class
-which is inherited from in addition to the primary base.  Declarative
-includes several helper features to make this work in terms of how
-mappings are declared.   An example of some commonly mixed-in
-idioms is below::
+:mod:`~sqlalchemy.ext.declarative` 모듈을 사용하면
+커스텀 베이스 클래스를 사용할 수도 있고 베이스 클래스에 믹스인 클래스를
+추가하는 방식으로 상속할 수도 있다.
+선언(Declarative) 시스템에는 매핑시에 이런 작업을 도와주는 몇가지
+보조 기능이 있다. 가장 흔하게 쓰이는 믹스인 방법은 다음과 같다.::
 
     from sqlalchemy.ext.declarative import declared_attr
 

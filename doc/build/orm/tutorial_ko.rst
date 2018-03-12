@@ -160,13 +160,13 @@ SQLAlchemy는 이 객체를 자동 생성한다.
                 Column('fullname', String(), table=<users>),
                 Column('password', String(), table=<users>), schema=None)
 
-.. sidebar:: Classical Mappings
+.. sidebar:: 클래식 매핑
 
     선언 시스템을 사용하는 것을 적극 추천하지만
     ORM 사용에서 선언 시스템이 필수불가결한 것은 아니다.
     덜 사용하는 방법이기는 하지만 일반 파이썬 클래스에 :func:`.mapper` 함수를
     적용하여 :class:`.Table`\ 로 맵핑할 수도 있다.
-    이 방법은 :ref:`classical_mapping`\ 에서 설명한다.
+    이 방법은 클래식 매핑(:ref:`classical_mapping`)에서 설명한다.
 
 선언 시스템은 일단 클래스 선언이 완료되면 추가적인 작동을 수행하기 위해
 파이썬 메타클래스를 사용한다.
@@ -179,7 +179,7 @@ SQLAlchemy는 이 객체를 자동 생성한다.
 선언 시스템을 사용한다면 선언용 베이스 클래스의 ``.metadata`` 속성으로
 이 객체에 접근할 수 있다.
 
-:class:`.MetaData`\ 는 제한된 수의 스키마 생성 명령어 집합를
+:class:`.MetaData`\ 는 제한된 수의 스키마 생성 명령어 집합을
 데이터베이스로 보내기 위한 기능을 포함하는 레지스트리(:term:`registry`)이다.
 현재 우리의 SQLite 데이터베이스는 실제로 ``users`` 테이블을 가지고 있지 않기 때문에
 아직 존재하지 않는 모든 테이블에 대해 CREATE TABLE 명령을 데이터베이스에 내리기위해
@@ -204,29 +204,33 @@ SQLAlchemy는 이 객체를 자동 생성한다.
     ()
     COMMIT
 
-.. topic:: Minimal Table Descriptions vs. Full Descriptions
+.. topic:: 테이블 최소 기술(minimal description) 및 전체 기술(full description)
 
     CREATE TABLE 신택스에 익숙한 사용자는 VARCHAR 컬럼이 길이제한 없이 생성된 것을
-    알아차렸을 것이다. SQLite나 PostegreSQL에서, 이 것은 유효한 데이터 타입지만, 다른 것에서는
-    그렇지 않다. 따라서 이 튜토리얼을 그런 데이터베이스에서 실행하는 경우 SQLAlchemy를 통해서
-    CREATE TABLE을 발행하고 싶을 때 "길이"를 :class:`~sqlalchemy.types.String` 타입에
-    아래처럼 제공해야 한다::
+    알아차렸을 것이다.
+    이 방식은 SQLite나 PostegreSQL에서는 유효하지만, 다른 데이터베이스 시스템에서는
+    그렇지 않다.
+    따라서 이 튜토리얼을 SQLite나 PostegreSQL가 아닌 다른 데이터베이스에서 실행하는
+    경우에는 CREATE TABLE 명령을 실행할 때 문자열 길이를
+    :class:`~sqlalchemy.types.String` 자료형에 다음처럼 제공해야 한다::
 
         Column(String(50))
 
-    :class:`~sqlalchemy.types.String`\ 의 length 필드와, :class:`~sqlalchemy.types.Integer',
+    :class:`~sqlalchemy.types.String`\ 의 length 필드와
+    :class:`~sqlalchemy.types.Integer',
     :class:`~sqlalchemy.types.Numeric` 등에서 이용 가능한 precision/scale 필드는 테이블을
     생성할 때를 제외하고는 SQLAlchemy에 의해 참조되지 않는다.
 
-    추가적으로, Firebird와 Oracle은 새로운 primary key 식별자를 생성하기 위해서 시퀀스를 요구하는데
-    SQLAlchemy는 지시 없이 이런 것들을 가정하거나 생성하지 않는다. 시퀀스를 위해서는
-    :class:`~sqlalchemy.schema.Sequence` 구조를 사용해야 한다::
+    추가적으로, Firebird와 Oracle은 새로운 primary key를 만들 때
+    시퀀스(sequece)를 요구하는데 SQLAlchemy는 명시적 지시없이는 시퀀스를 생성하지 않는다.
+    시퀀스를 만들려면
+    :class:`~sqlalchemy.schema.Sequence`\ 를 사용한다::
 
         from sqlalchemy import Sequence
         Column(Integer, Sequence('user_id_seq'), primary_key=True)
 
-    declarative 매핑을 통해 생성된 전체, :class:`~sqlalchemy.schema.Table`\ 는
-    아래와 같다::
+    선언적 매핑을 통해 생성된 전체 :class:`~sqlalchemy.schema.Table` 클래스는
+    다음과 같다::
 
         class User(Base):
             __tablename__ = 'users'
@@ -239,12 +243,12 @@ SQLAlchemy는 이 객체를 자동 생성한다.
                 return "<User(name='%s', fullname='%s', password='%s')>" % (
                                         self.name, self.fullname, self.password)
 
-    주로 파이썬 내에서의 사용만을 위해 고안된
-    최소한의 구조와 더 엄격한 요구사항이 있는 특정한 백엔드 세트에서의 CREATE TABLE 명령문을
-    위해서 사용되는 구조의 차이점을 강조하기 위해 상세한 테이블 정의를 따로 포함시켰다.
+    파이썬 내에서만 테이블 클래스를 쓸 때는 이렇게 할 필요가 없지만 여기에서는
+    더 엄격한 요구사항이 있는 특정 백엔드 데이터베이스에서 CREATE TABLE 명령을
+    실행할 때를 대비하여 보다 상세한 테이블 정의를 해 보았다.
 
-Create an Instance of the Mapped Class
-======================================
+매핑된 클래스의 인스턴스 생성
+=================================================================
 
 매핑이 끝나면, ``User`` 객체를 생성하고 검사해보자::
 
@@ -257,68 +261,73 @@ Create an Instance of the Mapped Class
     'None'
 
 
-.. sidebar:: the ``__init__()`` method
+.. sidebar:: ``__init__()`` 메서드
 
-    Declarative system을 이용해 정의된 ``User`` 클래스는 컨스트럭터(예, ``__init__()`` 메서드)를
-    제공받는데 이 컨스트럭터는 자동적으로 우리가 매핑해놓은 컬럼과 일치하는 키워드명을 받는다.
-    우리의 클래스에서 명시적인 ``__init__()``\ 메서드를 자유롭게 정의할 수도 있다.
-    이 메서드는 Declarative에 의해 제공된 기본 메서드를 덮어쓰게 된다.
+    선언적 시스템을 이용해 정의된 ``User`` 클래스의 생성자(``__init__()`` 메서드)는
+    자동적으로 우리가 매핑해놓은 컬럼과 일치하는 속성을 가진다.
+    명시적으로 ``__init__()``\ 메서드를 정의할 수도 있다.
+    이 경우에는 선언적 시스템에 의해 제공된 기본 메서드를 덮어쓰게 된다.
 
-우리가 컨스트럭터에서 지정하지 않았더라도 접근하면 ``id`` 속성으로 ``None`` 값을 생성한다
-(파이썬이 일반적으로 정의되지 않은 속성에 대해 ``AttributionError``\ 를 발생시키는 것과
-반대된다). SQLAlchemy의 :term:`instrumentation`\ 는 일반적으로 컬럼에 매핑된 속성에 처음
-접근했을 때 이 기본 값을 생성한다. 실제로 값을 할당한 속성은
-데이터베이스에 보내질 최종적인 INSERT 명령문에서 사용될 수 있도록 계측 시스템이 추적한다.
+(일반적으로 파이썬에서 정의되지 않은 속성에 대해 ``AttributionError``\ 를 발생시키는 것과
+반대로) 생성자에서 지정하지 않은 ``id`` 속성은 자동으로 ``None`` 값이 된다.
+SQLAlchemy의 인스트루멘테이션(:term:`instrumentation`)은 일반적으로
+컬럼에 매핑된 속성에 처음 접근했을 때 디폴트 값을 생성한다.
+실제로 값이 할당된 속성은 데이터베이스에 보내질 최종적인 INSERT 명령문에서
+사용될 수 있도록 인스트루멘테이션 시스템이 계속 추적한다.
 
-Creating a Session
+세션 생성
 ==================
 
-이제 데이터베이스와 대화할 준비가 되었다. 데이터베이스로 향하는 ORM의 "handle"dms :class:`~sqlalchemy.orm.session.Session`\ 이다.
-:func:`~sqlalchemy.create_engine`\ 명령문과 같은 수준에서 처음 어플리케이션을 셋업할 때,
-우리는 새로운 :class:`~sqlalchemy.orm.session.Session` 객체를 위한 공장으로서 사용될
+이제 데이터베이스와 대화할 준비가 되었다.
+데이터베이스에 대한 ORM의 핸들(handle)은 :class:`~sqlalchemy.orm.session.Session`\ 이다.
+:func:`~sqlalchemy.create_engine`\ 명령으로 처음 어플리케이션을 셋업할 때,
+:class:`~sqlalchemy.orm.session.Session` 객체용 팩토리로 사용할
 :class:`~sqlalchemy.orm.session.Session` 클래스를 정의한다.
 
     >>> from sqlalchemy.orm import sessionmaker
     >>> Session = sessionmaker(bind=engine)
 
-만약 당신의 어플리케이션이 :class:`~sqlalchemy.engine.Engine`\ 를 가지고 있지 않은 경우
-모듈 레벨의 객체를 정의할 때 그냥 아래처럼 셋업하면 된다::
+만약 어플리케이션에 :class:`~sqlalchemy.engine.Engine`\ 이 없는 경우에는
+모듈에서 그냥 다음처럼 셋업하면 된다::
 
     >>> Session = sessionmaker()
 
-나중에, :func:`~sqlalchemy.create_engine`\ 으로 엔진을 만들었을 때
-:meth:`~.sessionmaker.configure`\ 를 사용해 :class:`~sqlalchemy.orm.session.Session`\ 에
-연결할 수 있다::
+나중에 :func:`~sqlalchemy.create_engine`\ 으로 엔진을 만들었을 때
+:meth:`~.sessionmaker.configure`\ 를 사용해서
+엔진을 :class:`~sqlalchemy.orm.session.Session`\ 에 연결할 수 있다::
 
     >>> Session.configure(bind=engine)  # once engine is available
 
-.. sidebar:: Session Lifecycle Patterns
+.. sidebar:: 세션 생애 주기 패턴
 
-    언제 :class:`.Session`\ 을 만들어야 하냐는 질문은 어떤 종류의 어플리케이션을 만들고 있느냐에
-    따라 다르다. :class:`.Session`\ 는 로컬에서 특정한 데이터베이스에 연결하는 객체를 위한
-    작업 공간일 뿐이라는 점을 명심해라. 만약 어플리케이션 쓰레드를 디너 파티의 게스트라고 생각한다면
-    :class:`.Session`\ 은 게스트의 접시이고 클래스가 담고있는 객체는 음식이다 (그리고 데이터베이스는
-    ... 부엌?)! 이 주제에 대한 정보는 :ref:`session_faq_whentocreate`\ 에서 더
-    찾아볼 수 있다.
+    언제 :class:`.Session`\ 을 만들어야 하는가 하는 질문은 어떤 종류의 어플리케이션을 만들고 있나에
+    따라 다르다.
+    :class:`.Session`\ 는 로컬에서 특정한 데이터베이스에 연결하는 객체를 위한
+    작업 공간일 뿐이라는 점을 명심해라.
+    만약 어플리케이션 쓰레드를 디너 파티의 게스트라고 생각한다면
+    :class:`.Session`\ 은 게스트의 접시에 불과하고 클래스가 담고있는 객체가 실제 음식이다!
+    (그리고 데이터베이스는 ... 부엌?)
+    이 주제에 대한 보다 자세한 정보는 :ref:`session_faq_whentocreate`\ 를 참조한다.
 
-이 커스텀 메이드 :class:`~sqlalchemy.orm.session.Session` 클래스는
-우리의 데이터베이스에 묶인 새로운 :class:`~sqlalchemy.orm.session.Session` 객체를 생성한다.
-다른 트랜즈액선 특성은 :class:`~.sessionmaker`\ 을 호출할 때 정의할 수
-있다; 이 부분은 이후의 챕터에서 설명할 것이다. 그 다음, 당신이 데이터베이스와
-대화를 하고 싶을 때마다 당신은 :class:`~sqlalchemy.orm.session.Session`\ 를 인스턴스화해야
-한다::
+이 :class:`~sqlalchemy.orm.session.Session` 클래스는
+우리의 데이터베이스에 바인딩된 :class:`~sqlalchemy.orm.session.Session` 객체를 생성한다.
+기타 트랜잭션 특성은 :class:`~.sessionmaker`\ 을 호출할 때 정의할 수 있다;
+이 부분은 이후의 챕터에서 설명할 것이다.
+이제부터는 데이터베이스와 통신 하고 싶을 때마다
+:class:`~sqlalchemy.orm.session.Session`\ 를 인스턴스화 해야 한다::
 
     >>> session = Session()
 
 위의 :class:`~sqlalchemy.orm.session.Session`\ 은 SQLite :class:`.Engine`\ 과
-결합되어 있지만 아직 어떠한 연결도 열려있지 않다. 최초로 사용될 때 session은 :class:`.Engine`\ 에 의해 유지된 연결
-풀에서 연결을 획득하고 우리가 모든 변경사항을 커밋하고 session 객체를 닫기 전까지 연결을 유지한다.
+바인딩되어 있지만 아직 어떠한 연결도 열려있지 않다.
+최초로 session을 사용할 때  :class:`.Engine`\ 에 의해 유지된 컨넥션 풀에서 컨넥션을
+획득하여 모든 변경사항을 커밋하고 session 객체를 닫기 전까지 연결을 유지한다.
 
 
-Adding and Updating Objects
-===========================
+객체의 추가 및 갱신
+====================================
 
-``User`` 객체를 유지하기 위해서, :class:`~sqlalchemy.orm.session.Session`\ 에
+``User`` 객체를 영구보존하기 위해서, :class:`~sqlalchemy.orm.session.Session`\ 에
 :meth:`~.Session.add`\ 로 객체를 추가한다::
 
     >>> ed_user = User(name='ed', fullname='Ed Jones', password='edspassword')

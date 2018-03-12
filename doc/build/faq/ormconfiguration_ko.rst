@@ -8,42 +8,42 @@ ORM 설정
 
 .. _faq_mapper_primary_key:
 
-How do I map a table that has no primary key?
----------------------------------------------
+프라이머리 키가 없는 테이블은 어떻게 매핑하는가?
+----------------------------------------------------------------------------
 
-The SQLAlchemy ORM, in order to map to a particular table, needs there to be
-at least one column denoted as a primary key column; multiple-column,
-i.e. composite, primary keys are of course entirely feasible as well.  These
-columns do **not** need to be actually known to the database as primary key
-columns, though it's a good idea that they are.  It's only necessary that the columns
-*behave* as a primary key does, e.g. as a unique and not nullable identifier
-for a row.
+SQLAlchemy ORM은 특정 테이블을 매핑할 때 프라이머리 키로 표시한 컬럼이
+하나 이상 있어야 한다. 복수 컬럼 프라이머리 키 즉, 복합 키도 물론 사용할 수 있다.
+사실 ORM에서 프라이머리 키로 표시한 열이 실제로 데이터베이스에서 반드시 프라이머리 키일
+필요는 없다.(물론 데이터베이스에서 프라이머리 키인 편이 좋다.)
+이는 해당 열이 프라이머리 키처럼 하나의 행에 대해 유니크하고 널값이 아닌
+지정자가 필요하기 때문에 생긴 조건이다.
 
-Most ORMs require that objects have some kind of primary key defined
-because the object in memory must correspond to a uniquely identifiable
-row in the database table; at the very least, this allows the
-object can be targeted for UPDATE and DELETE statements which will affect only
-that object's row and no other.   However, the importance of the primary key
-goes far beyond that.  In SQLAlchemy, all ORM-mapped objects are at all times
-linked uniquely within a :class:`.Session`
-to their specific database row using a pattern called the :term:`identity map`,
-a pattern that's central to the unit of work system employed by SQLAlchemy,
-and is also key to the most common (and not-so-common) patterns of ORM usage.
+대부분의 ORM은 객체가 프라이머리 키를 가지도록 요구한다.
+왜냐하면 메모리 상의 객체는 데이터베이스 테이블의 특정한 하나의 행과
+대응해야 하기 때문이다.
+이렇게 하면 UPDATE 또는 DELETE 문으로 테이블의 해당 행을 제외한 다른 행에
+영향을 미치지 않는다. 하지만 프라이머리 키의 중요성은 이뿐이 아니다.
+SQLAlchemy에서는 모든 매핑 객체가 :class:`.Session` 안에서
+아이덴티티 맵(:term:`identity map`)이라는 패턴을 써서
+데이터베이스의 특정 행과 유니크하게 연결된다.
+이 패턴은 SQLAlchemy가 채택한 작업 단위(unit of work) 패턴의 핵심이며
+대부분의 ORM 사용에 있어 필수적이다.
 
 
 .. note::
 
-    It's important to note that we're only talking about the SQLAlchemy ORM; an
-    application which builds on Core and deals only with :class:`.Table` objects,
-    :func:`.select` constructs and the like, **does not** need any primary key
-    to be present on or associated with a table in any way (though again, in SQL, all tables
-    should really have some kind of primary key, lest you need to actually
-    update or delete specific rows).
+    여기에서는 SQLAlchemy ORM에 대해서만 이야기하고 있다.
+    Core를 사용하여 :class:`.Table` 객체나 :func:`.select` 를 직접 사용하면
+    현재 테이블이나 관련 테이블에서 프라이머리 키를 필요로 하지 않을 수도 있다.
+    (하지만 실제 SQL에서는 특정한 행을 갱신하거나 지우기 위해 반드시
+    프라이머리 키에 해당하는 무었인가가 있어야 한다.)
 
-In almost all cases, a table does have a so-called :term:`candidate key`, which is a column or series
-of columns that uniquely identify a row.  If a table truly doesn't have this, and has actual
-fully duplicate rows, the table is not corresponding to `first normal form <http://en.wikipedia.org/wiki/First_normal_form>`_ and cannot be mapped.   Otherwise, whatever columns comprise the best candidate key can be
-applied directly to the mapper::
+대부분의 경우, 테이블은 후보 키(:term:`candidate key`)라는 것을 가진다.
+후보 키는 행을 유니크하게 구별할 수 있는 하나 혹은 복수의 열을 말한다.
+만약 테이블에 이게 없다면 중복된 행을 가질 수도 있고
+`1차 정규형  <http://en.wikipedia.org/wiki/First_normal_form>`_\ 이 아니고
+매핑할 수도 없는 테이블이라는 뜻이다.
+테이블에 후보 키 역할을 하는 열을 직접 설정할 수도 있다.::
 
     class SomeClass(Base):
         __table__ = some_table_with_no_pk
@@ -51,8 +51,7 @@ applied directly to the mapper::
             'primary_key':[some_table_with_no_pk.c.uid, some_table_with_no_pk.c.bar]
         }
 
-Better yet is when using fully declared table metadata, use the ``primary_key=True``
-flag on those columns::
+더 좋은 방법은 메타데이터에서 이 열에 ``primary_key=True`` 속성을 가하는 것이다.::
 
     class SomeClass(Base):
         __tablename__ = "some_table_with_no_pk"
@@ -60,9 +59,9 @@ flag on those columns::
         uid = Column(Integer, primary_key=True)
         bar = Column(String, primary_key=True)
 
-All tables in a relational database should have primary keys.   Even a many-to-many
-association table - the primary key would be the composite of the two association
-columns::
+관계형 데이터베이스의 모든 테이블은 프라이머리 키가 있어야 한다.
+다대다(many-to-many) 관계의 테이블에서는 프라이머리 키가
+두 개의 연관 열의 조합이 될 수 있다.::
 
     CREATE TABLE my_association (
       user_id INTEGER REFERENCES user(id),

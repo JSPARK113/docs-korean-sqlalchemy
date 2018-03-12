@@ -285,9 +285,10 @@
             `Domain Model (wikipedia) <http://en.wikipedia.org/wiki/Domain_model>`_
 
     unit of work
+    작업 단위 패턴
         이 패턴은 시스템이 객체의 변화를 지속적으로 투명하게 추적하고
         적용되지 않은 변화를 정기적으로 데이터베이스로 내보낸다.
-        SQLAlchemy의 세션은 이 패턴을 Hibernate와 유사한 방식으로 구현한다.
+        SQLAlchemy의 세션(Session)은 이 패턴을 Hibernate와 유사한 방식으로 구현한다.
 
         .. seealso::
 
