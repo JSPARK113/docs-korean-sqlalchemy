@@ -110,17 +110,14 @@
         그 클래스의 특정 컬럼이나 관련된 클래스의 테이블을 나타내는 디스크립터(:term:`descriptors`)를 추가시킨다.
 
     identity map
-        A mapping between Python objects and their database identities.
-        The identity map is a collection that's associated with an
-        ORM :term:`session` object, and maintains a single instance
-        of every database object keyed to its identity.   The advantage
-        to this pattern is that all operations which occur for a particular
-        database identity are transparently coordinated onto a single
-        object instance.  When using an identity map in conjunction with
-        an :term:`isolated` transaction, having a reference
-        to an object that's known to have a particular primary key can
-        be considered from a practical standpoint to be a
-        proxy to the actual database row.
+        파이썬 객체와 데이터베이스 identity 사이의 매핑.
+        identity map는 ORM :term:`session` 객체와 연동되어 있는 데이터 구조이며
+        데이터베이스 identity로 구분가능한 모든 데이터베이스 객체에 연동된
+        파이썬 객체를 보관한다.
+        identity map을 사용하면 특정 데이터베이스 객체에 대한 연산이 모두
+        투명하게 파이썬 객체 인스턴스로 전달된다.
+        :term:`isolated` 트랜잭션에서 identity map을 사용하면
+        특정한 primary key를 가지는 객체에 대한 참조는 사실상 실제 데이터베이스 행과 같다.
 
         .. seealso::
 
@@ -471,10 +468,9 @@
 
     ACID
     ACID model
-        An acronym for "Atomicity, Consistency, Isolation,
-        Durability"; a set of properties that guarantee that
-        database transactions are processed reliably.
-        (via Wikipedia)
+        "Atomicity, Consistency, Isolation, Durability"의 약자.
+        데이터베이스 트랜잭션이 신뢰성을 가지도록 보장하는 일련의 특성을 말한다.
+        (위키피디아)
 
         .. seealso::
 
@@ -520,13 +516,11 @@
 
     isolation
     isolated
-        The isolation property of the :term:`ACID` model
-        ensures that the concurrent execution
-        of transactions results in a system state that would be
-        obtained if transactions were executed serially, i.e. one
-        after the other. Each transaction must execute in total
-        isolation i.e. if T1 and T2 execute concurrently then each
-        should remain independent of the other.
+        :term:`ACID` 모델 중 isolation 특성은
+        트랜잭션을 동시에 실행했을 때와 순차적을 실행했을 때
+        같은 결과를 가지도록 보장하는 것을 말한다.
+        만약 트랜잭션 T1과 T2가 동시에 실행되어도 서로 영향을 미치지 않으려면
+        완전 isolation 수준이어야 한다.
         (via Wikipedia)
 
         .. seealso::

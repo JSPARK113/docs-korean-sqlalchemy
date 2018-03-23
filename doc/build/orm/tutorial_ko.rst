@@ -147,7 +147,7 @@ SQLAlchemy는 클래스가 참조하는 테이블에 대해 어떠한 가정도 
 스키마 생성
 ===============
 
-선언 시스템을 통해 생성된 ``User`` 클래스로 테이블에 대한 정보 :term:`table metadata`\ 를
+선언 시스템을 통해 생성된 ``User`` 클래스로 테이블에 대한 정보(:term:`table metadata`)를
 정의할 수 있었다.
 특정 테이블에 대한 실제 데이터는 :class:`.Table` 객체로 표현되는데
 SQLAlchemy는 이 객체를 자동 생성한다.
@@ -334,13 +334,14 @@ SQLAlchemy의 인스트루멘테이션(:term:`instrumentation`)은 일반적으�
 
 이 시점에서 우리는 인스턴스가 **pending** 상태라고 한다; SQL은 아직 출력되지 않았으며
 객체는 아직 데이터베이스의 행으로 나타나지 않았다. :class:`~sqlalchemy.orm.session.Session`\ 는
-**flush** 라는 프로세스를 사용해 필요한 경우 즉시 ``Ed Jones``\ 를 입력하기 위해 SQL을
-출력할 것이다. 만약 데이터베이스에 ``Ed Jones``\ 를 쿼리하면 먼저 대기중인 정보가 데이터베이스에
-입력되고 그 다음으로 쿼리가 실행된다.
+**flush** 라는 프로세스를 사용해 필요한 경우
+즉시 ``Ed Jones``\ 를 데이터베이스에 입력하는 SQL을 생성한다.
+만약 데이터베이스에 ``Ed Jones``\ 를 쿼리한다면 먼저 대기중인 정보가 데이터베이스에
+입력되고 그 다음에야 쿼리가 실행된다.
 
-예를 들어, 다음처럼 새로운 :class:`~sqlalchemy.orm.query.Query` 객체를 사용하여
-``User``\ 의 인스턴스를 불러온다. ``ed``의 ``name`` 속성으로 필터링하고 결과에서 
-첫 번째 결과만 보여줄 것을 지시했다. 이렇게 하면 우리가 추가했던 것과 똑같은 ``User``
+예를 들어, 다음처럼 :class:`~sqlalchemy.orm.query.Query` 객체를 사용하여
+``User``\ 의 인스턴스를 불러올 수 다. ``ed``\ 의 ``name`` 속성으로 필터링된 결과에서
+첫 번째 것만 받아오도록 했다. 이렇게 하면 우리가 추가했던 것과 똑같은 ``User``
 인스턴스가 반환된다:
 
 .. sourcecode:: python+sql
@@ -360,18 +361,21 @@ SQLAlchemy의 인스트루멘테이션(:term:`instrumentation`)은 일반적으�
     {stop}>>> our_user
     <User(name='ed', fullname='Ed Jones', password='edspassword')>
 
-사실 :class:`~sqlalchemy.orm.session.Session`\ 는 반환할 행이 객체의 내부 맵에서
-나타난 **똑같은** 행인지 식별한다. 그래서 우리는 실제로 우리가 추가한 것가 동일한 인스턴스를 돌려 받게 된다::
+사실 :class:`~sqlalchemy.orm.session.Session`\ 는 반환할 행이 객체의 내부 맵에 있는 것과
+*동일한** 행이라는 것을 알고 있다.
+그래서 우리는 실제로 우리가 추가한 것과 동일한 인스턴스를 돌려 받게 된다::
 
     >>> ed_user is our_user
     True
 
-여기서 작동하는 ORM 컨셉은 :term:`identity map`\ 이라고 하며
-:class:`~sqlalchemy.orm.session.Session` 세션에 있는 특정한 행에 대한 모든 작업이
-같은 데이터 셋에서 작동함을 보장한다. 일단 특정한 primary key가 :class:`~sqlalchemy.orm.session.Session`\ 에 있으며
-:class:`~sqlalchemy.orm.session.Session`\ 의 모든 SQL 쿼리는 항상 특정한 primary key에 대한
-동일한 파이썬 객체를 리턴한다; 또한 세션 내에서 동일한 primary key를 이미 보유중인 두 번째 객체를
-배치하려고 시도하면 에러가 발생한다.
+여기서 동작하는 ORM 개념은 :term:`identity map`\ 이다.
+identity map은 :class:`~sqlalchemy.orm.session.Session` 세션에 있는
+특정 행에 대한 모든 작업이 같은 데이터 셋에서 작동함을 보장한다.
+일단 특정한 primary key가 :class:`~sqlalchemy.orm.session.Session`\ 에 있으면
+:class:`~sqlalchemy.orm.session.Session`\ 의 모든 SQL 쿼리는
+ 항상 특정한 primary key에 대해 동일한 파이썬 객체를 반환한다.
+또한 세션 내에서 동일한 primary key를 이미 보유중인 두 번째 객체를 배치하려고 시도하면
+에러가 발생한다.
 
 :func:`~sqlalchemy.orm.session.Session.add_all`\ 를 이용해서 ``User`` 객체를
 한 번에 추가할 수 있다:
@@ -389,7 +393,7 @@ SQLAlchemy의 인스트루멘테이션(:term:`instrumentation`)은 일반적으�
 
     >>> ed_user.password = 'f8s7ccs'
 
-:class:`~sqlalchemy.orm.session.Session`\ 는 계속 추적을 하고 있다. 예를 들어,
+:class:`~sqlalchemy.orm.session.Session`\ 는 계속 변경 추적을 한다. 예를 들어,
 세션은 ``Ed Jones``\ 가 변경됐다는 것을 안다:
 
 .. sourcecode:: python+sql
@@ -397,7 +401,7 @@ SQLAlchemy의 인스트루멘테이션(:term:`instrumentation`)은 일반적으�
     >>> session.dirty
     IdentitySet([<User(name='ed', fullname='Ed Jones', password='f8s7ccs')>])
 
-그리고 새로운 3개의 ``User`` 객체가 계류중이라는 것도 알고 있다:
+그리고 새로운 3개의 ``User`` 객체가 대기중이라는 것도 알고 있다:
 
 .. sourcecode:: python+sql
 
@@ -406,12 +410,12 @@ SQLAlchemy의 인스트루멘테이션(:term:`instrumentation`)은 일반적으�
     <User(name='mary', fullname='Mary Contrary', password='xxg527')>,
     <User(name='fred', fullname='Fred Flinstone', password='blah')>])
 
-우리는 :class:`~sqlalchemy.orm.session.Session`\ 에 모든 남아있는 변경점을
-데이터베이스에 내보내고 계속 진행중이었던 트랜스액션을 커밋했다.
-이 작업은 :meth:`~.Session.commit`\ 을 통해서 수행했다.
-:class:`~sqlalchemy.orm.session.Session`\ 은 "ed"의 비밀번호 변경을 위한
-``UPDATE`` 명령과, 추가한 3개의 새로운 ``User`` 객체를 위한 ``INSERT`` 명령을
-내보냈다:
+:meth:`~.Session.commit` 명령을 사용하면
+:class:`~sqlalchemy.orm.session.Session`\ 에 모든 남아있는 변경 사항을
+수정하는 트랜잭션을 커밋한다. 실제로
+:class:`~sqlalchemy.orm.session.Session`\ 가 "ed"의 비밀번호를 변경하는
+``UPDATE`` 명령과, 추가한 3개의 새로운 ``User`` 객체를 삽입하는 ``INSERT`` 명령을
+내보내는 것을 볼 수 있다.:
 
 .. sourcecode:: python+sql
 
@@ -426,10 +430,11 @@ SQLAlchemy의 인스트루멘테이션(:term:`instrumentation`)은 일반적으�
     ('fred', 'Fred Flinstone', 'blah')
     COMMIT
 
-:meth:`~.Session.commit`\ 은 남아있는 변경점을 데이터베이스로 흘려보내고 트랜스액션을
-커밋한다. 세션에 의해 참조된 연결 리소스는 연결 풀로 반환되었다. 이 세션을 통한
-후속 작업은 **새로운** 트랜스액션 안에서 발생하며 트랜스액션은 최초로 필요로 할 때
-연결 리소스를 다시 획득할 것이다.
+:meth:`~.Session.commit`\ 은 남아있는 변경 사항을 데이터베이스로 보내고 트랜잭션을
+커밋한다.
+작어비 끝나면 세션에 의해 참조된 컨넥션 리소스는 연결 풀로 반환된다.
+이 세션을 사용하여 또다른 작업을 하면 **새로운** 트랜잭션 안에서 실행되고
+컨넥션 리소스도 필요한 시점에 다시 획득한다.
 
 이전에 ``None``\ 이었던 Ed의 ``id`` 속성은 이제 값을 가지고 있다:
 
@@ -447,24 +452,25 @@ SQLAlchemy의 인스트루멘테이션(:term:`instrumentation`)은 일반적으�
     (1,)
     {stop}1
 
-:class:`~sqlalchemy.orm.session.Session`\ 가 데이터베이스에 새로운 행을 삽입하면,
-최초로 접근할 때 또는 즉시, 인스턴스에서 새롭게 생성된 식별자들과 데이터베이스 생성 기본 값을 이용 할 수 있다.
-이 경우,
-:meth:`~.Session.commit`\ 을 실행한 뒤에 새로운 트랜스액션이 시작되었기 때문에
-접근시에 전체 행이 다시 로드된다. SQLAlchemy는 기본적으로 새로운 트랜스액션에
-접근했을 때 이전 트랜스액션으로부터 얻은 데이터를 갱신함으로써 가장 최신 데이터를 이용할 수 있게 해준다.
+:class:`~sqlalchemy.orm.session.Session`\ 가 데이터베이스에 새로운 행을 삽입하면
+인스턴스에서 새롭게 생성된 식별자들과 데이터베이스 생성 기본 값이
+즉시 혹은 최초로 접근할 때 준비된다.
+이 때에는 :meth:`~.Session.commit`\ 을 실행한 뒤에 새로운 트랜잭션이 시작되었기 때문에
+전체 행이 다시 로드된다.
+SQLAlchemy는 기본적으로 이전 트랜잭션으로부터 얻은 데이터를 새로운 트랜잭션에서 사용할 때는
+다시 데이터를 리로드(reload)해서 가장 최신 데이터를 이용할 수 있게 해준다.
 리로드 수준은 :doc:`/orm/session`\ 에서 설명하는대로 조정할 수 있다.
 
-.. topic:: Session Object States
+.. topic:: 세션 객체의 상태
 
    ``User`` 객체가 :class:`.Session`\ 밖에서, :class:`.Session`\ 안으로 primary key 없이
-   이동하면서 실제로 삽입되었고, 4가지 중 3가지의 가능한 "객체 상태"(**transient**, **pending**, **persistent**)
+   이동하면서 삽입되었고, 4가지 중 3가지의 가능한 "객체 상태"(**transient**, **pending**, **persistent**)
    사이에서 움직였다. 이 상태들과 그 의미를 알고 있는 것은 도움이 되므로 :ref:`session_object_states`\ 에서
    간단한 개요를 읽어 보기 바란다.
 
 Rolling Back
 ============
-:class:`~sqlalchemy.orm.session.Session`\ 은 트랜스액션 내에서 작동하기 때문에
+:class:`~sqlalchemy.orm.session.Session`\ 은 트랜잭션 내에서 작동하기 때문에
 변경한 것을 롤백할 수도 있다. 되돌릴 변경사항 두 개를 만들어보자;
 ``ed_user``\ 의 사용자 이름을 ``Edwardo``\ 로 설정한다:
 
@@ -479,7 +485,7 @@ Rolling Back
     >>> fake_user = User(name='fakeuser', fullname='Invalid', password='12345')
     >>> session.add(fake_user)
 
-세션으로 쿼리를 하면, 변경 사항이 현재의 트랜스액션으로 들어간 것을 확인할 수 있다:
+세션으로 쿼리를 하면, 변경 사항이 현재의 트랜잭션으로 들어간 것을 확인할 수 있다:
 
 .. sourcecode:: python+sql
 

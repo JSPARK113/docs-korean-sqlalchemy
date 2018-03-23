@@ -145,8 +145,8 @@ the correct state before it ever gets to the flush step.
 
 .. _session_lifecycle_events:
 
-Object Lifecycle Events
------------------------
+객체 생애주기 이벤트
+----------------------------------------------
 
 Another use case for events is to track the lifecycle of objects.  This
 refers to the states first introduced at :ref:`session_object_states`.

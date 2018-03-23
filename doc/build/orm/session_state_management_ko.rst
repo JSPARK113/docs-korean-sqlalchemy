@@ -1,47 +1,41 @@
-State Management
+상태 관리
 ================
 
 .. _session_object_states:
 
-Quickie Intro to Object States
-------------------------------
+객체 상테에 대한 간단한 소개
+------------------------------------------------------------
 
-It's helpful to know the states which an instance can have within a session:
+객체가 세션에서 가질 수 있는 상태(state)에 대해 알고 있으면 도움이 된다.
 
-* **Transient** - an instance that's not in a session, and is not saved to the
-  database; i.e. it has no database identity. The only relationship such an
-  object has to the ORM is that its class has a ``mapper()`` associated with
-  it.
+* **전이(Transient)** - 객체가 세션안에 있지 않고 데이터베이스에도 저장되어 있지 않는 상태.
+  객체와 ORM의 관계는 오로지 객체의 클래스가 ``mapper()`` 메서드를 가지고 있다는 것 뿐이다.
 
-* **Pending** - when you :meth:`~.Session.add` a transient
-  instance, it becomes pending. It still wasn't actually flushed to the
-  database yet, but it will be when the next flush occurs.
+* **대기(Pending)** - :meth:`~.Session.add`\ 를 호출하면 전이 상태의 객체를 대기 상태로 만든다.
+  아직 데이터베이스로 정보가 전달되지 않았지만 다음번에 데이터 flush가 발생하면
+  데이터베이스로 정보가 전달되게 된다.
 
-* **Persistent** - An instance which is present in the session and has a record
-  in the database. You get persistent instances by either flushing so that the
-  pending instances become persistent, or by querying the database for
-  existing instances (or moving persistent instances from other sessions into
-  your local session).
+* **영속(Persistent)** - 객체가 세션 내에 있고 데이터베이스에도 해당 레코드가 존재하는 상태.
+  객체를 flush하거나 객체에 대한 쿼리를 데이터베이스로 보내면
+  (또는 다른 세션의 영속 상태 개체를 다른 로컬 세션으로 옮기면)
+  대기 상태의 객체가 영속 상태가 된다.
 
-* **Deleted** - An instance which has been deleted within a flush, but
-  the transaction has not yet completed.  Objects in this state are essentially
-  in the opposite of "pending" state; when the session's transaction is committed,
-  the object will move to the detached state.  Alternatively, when
-  the session's transaction is rolled back, a deleted object moves
-  *back* to the persistent state.
+* **삭제(Deleted)** - flush 내부에서 삭제되었지만 트랜젝션이 완료되지 못한 객체의 상태.
+  이 상태의 객체는 본질적으로 대기(pending) 상태와 정반대이다.
+  세션의 트랜잭션이 커밋되면 이 객체는 분리(detached) 상태가 된다.
+  만약 반대로 트랜잭션이 롤백되면 삭제 상태의 객체는 도로 영속 상태로 돌아간다.
 
   .. versionchanged:: 1.1 The 'deleted' state is a newly added session
      object state distinct from the 'persistent' state.
 
-* **Detached** - an instance which corresponds, or previously corresponded,
-  to a record in the database, but is not currently in any session.
-  The detached object will contain a database identity marker, however
-  because it is not associated with a session, it is unknown whether or not
-  this database identity actually exists in a target database.  Detached
-  objects are safe to use normally, except that they have no ability to
-  load unloaded attributes or attributes that were previously marked
-  as "expired".
+* **분리(Detached)** - 데이터베이스의 레코드에 대응되었었지만 현재 어떤 세션에도
+  속해있지 않는 객체의 상태. 분리된 객체는 데이터베이스 객체에 대한 마커(marker)를
+  포함하고 있지만 세션과 연결되어 있지 않으므로 실제로 타겟 데이터베이스에
+  이 데이터베이스 객체가 존재하는지 확인할 수 없다. 분리 상태의 객체도 사용할 수는
+  있지만 로드되지 않은 속성을 새로 로드할 수는 없다.
 
+
+가능한 상태의 변화에 대해 더 자세히 알고 싶으면 
 For a deeper dive into all possible state transitions, see the
 section :ref:`session_lifecycle_events` which describes each transition
 as well as how to programmatically track each one.
