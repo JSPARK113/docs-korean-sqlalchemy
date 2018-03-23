@@ -262,10 +262,10 @@ SQLAlchemy는 이 객체를 자동 생성한다.
 
 .. sidebar:: ``__init__()`` 메서드
 
-    선언적 시스템을 이용해 정의된 ``User`` 클래스의 생성자(``__init__()`` 메서드)는
+    선언 시스템을 이용해 정의된 ``User`` 클래스의 생성자(``__init__()`` 메서드)는
     자동적으로 우리가 매핑해놓은 컬럼과 일치하는 속성을 가진다.
     명시적으로 ``__init__()``\ 메서드를 정의할 수도 있다.
-    이 경우에는 선언적 시스템에 의해 제공된 기본 메서드를 덮어쓰게 된다.
+    이 경우에는 선언 시스템에 의해 제공된 기본 메서드를 덮어쓰게 된다.
 
 (보통 파이썬에서 정의되지 않은 속성을 사용하면 ``AttributionError``\ 가 발생하는 것과
 달리) 여기에서는 생성자에서 지정하지 않은 ``id`` 속성이 자동으로 ``None`` 값이 된다.
@@ -334,7 +334,7 @@ SQLAlchemy의 인스트루멘테이션(:term:`instrumentation`)은 일반적으�
 
 이 시점에서 우리는 인스턴스가 **pending** 상태라고 한다; SQL은 아직 출력되지 않았으며
 객체는 아직 데이터베이스의 행으로 나타나지 않았다. :class:`~sqlalchemy.orm.session.Session`\ 는
-**flush** 라는 프로세스를 사용해 필요한 경우
+필요한 경우 **flush** 라는 과정을 통해
 즉시 ``Ed Jones``\ 를 데이터베이스에 입력하는 SQL을 생성한다.
 만약 데이터베이스에 ``Ed Jones``\ 를 쿼리한다면 먼저 대기중인 정보가 데이터베이스에
 입력되고 그 다음에야 쿼리가 실행된다.
@@ -373,7 +373,7 @@ identity map은 :class:`~sqlalchemy.orm.session.Session` 세션에 있는
 특정 행에 대한 모든 작업이 같은 데이터 셋에서 작동함을 보장한다.
 일단 특정한 primary key가 :class:`~sqlalchemy.orm.session.Session`\ 에 있으면
 :class:`~sqlalchemy.orm.session.Session`\ 의 모든 SQL 쿼리는
- 항상 특정한 primary key에 대해 동일한 파이썬 객체를 반환한다.
+항상 특정한 primary key에 대해 동일한 파이썬 객체를 반환한다.
 또한 세션 내에서 동일한 primary key를 이미 보유중인 두 번째 객체를 배치하려고 시도하면
 에러가 발생한다.
 
@@ -432,7 +432,7 @@ identity map은 :class:`~sqlalchemy.orm.session.Session` 세션에 있는
 
 :meth:`~.Session.commit`\ 은 남아있는 변경 사항을 데이터베이스로 보내고 트랜잭션을
 커밋한다.
-작어비 끝나면 세션에 의해 참조된 컨넥션 리소스는 연결 풀로 반환된다.
+작업이 끝나면 세션에 의해 참조된 컨넥션 리소스는 연결 풀로 반환된다.
 이 세션을 사용하여 또다른 작업을 하면 **새로운** 트랜잭션 안에서 실행되고
 컨넥션 리소스도 필요한 시점에 다시 획득한다.
 
@@ -467,12 +467,12 @@ SQLAlchemy는 기본적으로 이전 트랜잭션으로부터 얻은 데이터�
    이동하면서 삽입되었고, 4가지 중 3가지의 가능한 "객체 상태"
    (**임시(transient)**, **대기(pending)**, **영속(persistent)**)
    사이에서 움직였다. 이 상태들과 그 의미를 알고 있는 것은 도움이 되므로
-   :ref:`session_object_states`\ 에 있는 간단한 설명를 읽어 보기 바란다.
+   :ref:`session_object_states`\ 에 있는 간단한 설명을 읽어 보기 바란다.
 
 롤백(roll back)
 ========================
 :class:`~sqlalchemy.orm.session.Session`\ 은 트랜잭션 내에서 작동하기 때문에
-변경한 것을 롤백할 수도 있다. 되돌릴 변경사항 두 개를 만들어보자;
+변경한 것을 롤백할 수도 있다. 되돌릴 변경 사항 두 개를 만들어보자;
 ``ed_user``\ 의 사용자 이름을 ``Edwardo``\ 로 설정한다:
 
 .. sourcecode:: python+sql
@@ -542,15 +542,16 @@ SELECT를 이용하면 데이터베이스에서 생성된 변경 사항을 볼 �
 
 .. _ormtutorial_querying:
 
-쿼리
-========
+쿼리(query)
+====================
 
 :class:`~sqlalchemy.orm.query.Query` 객체는
 :class:`~sqlalchemy.orm.session.Session`\ 의
 :class:`~sqlalchemy.orm.session.Session.query()` 메서드를 사용해 생성할 수 있다.
-이 함수는 여러 인자를 받으며 인자는 클래스와 클래스 계측 설명자의 조합이 될 수 있다.
+이 함수는 어떤 클래스와 클래스 인스트루먼트 디스크립터의 조합도 인수로 넣을 수 있고
+인수의 갯수도 상관없다.
 아래는 ``User`` 인스턴스를 불러오는 :class:`~sqlalchemy.orm.query.Query`\ 다.
-반복 컨텍스트에서 구해질 때, 존재하는 ``User`` 객체 리스트가 리턴된다:
+이 객체를 iteration 컨텍스트에서 evaluation하면, 모든 ``User`` 객체의 리스트를 반환한다.
 
 .. sourcecode:: python+sql
 
@@ -567,9 +568,9 @@ SELECT를 이용하면 데이터베이스에서 생성된 변경 사항을 볼 �
     mary Mary Contrary
     fred Fred Flinstone
 
-:class:`~sqlalchemy.orm.query.Query`\ 는 인자로 ORM 계측 설명자도 받을 수 있다.
+:class:`~sqlalchemy.orm.query.Query`\ 는 인수로 ORM 인스트루먼트 디스크립터도 받을 수 있다.
 다중 클래스 엔티티나 컬럼 기반 엔티티가 :class:`~sqlalchemy.orm.session.Session.query()`\ 에
-인자로 전달 되면 리턴되는 결과는 튜플로 나타난다:
+인수로 전달되면 반환 결과는 튜플로 나타난다:
 
 .. sourcecode:: python+sql
 
@@ -584,8 +585,9 @@ SELECT를 이용하면 데이터베이스에서 생성된 변경 사항을 볼 �
     mary Mary Contrary
     fred Fred Flinstone
 
-:class:`~sqlalchemy.orm.query.Query`\ 로 리턴되는 튜플은 *명명된* 튜플이며, :class:`.KeyedTuple`\ 에
-의해 제공되고 일반 파이썬 객체처럼 다루어진다. 속성의 속성 이름과, 클래스의 클래스 이름은 동일하다:
+:class:`~sqlalchemy.orm.query.Query`\ 로 반환되는 튜플은 *명명된* 튜플이며,
+:class:`.KeyedTuple`\ 클래스로 제공되고 일반 파이썬 객체처럼 다루어진다.
+속성의 속성 이름과, 클래스의 클래스 이름은 동일하다:
 
 .. sourcecode:: python+sql
 
@@ -602,8 +604,9 @@ SELECT를 이용하면 데이터베이스에서 생성된 변경 사항을 볼 �
     <User(name='mary', fullname='Mary Contrary', password='xxg527')> mary
     <User(name='fred', fullname='Fred Flinstone', password='blah')> fred
 
-개별 컬럼 표현의 이름은 :meth:`~.ColumnElement.label` 구조를 사용해 조정할 수 있으
-이 구조는 :class:`.ColumnElement` 파생 객체와 하나의 클래스에 맵핑된 클래스 속성(예, ``User.name``)에서
+개별 컬럼 표현식의 이름은 :meth:`~.ColumnElement.label` 구조를 사용해 조정할 수 있으며
+이 구조는 :class:`.ColumnElement` 파생 객체와
+하나의 클래스에 맵핑된 클래스 속성(예, ``User.name``)에서
 사용할 수 있다:
 
 .. sourcecode:: python+sql
@@ -618,7 +621,8 @@ SELECT를 이용하면 데이터베이스에서 생성된 변경 사항을 볼 �
     mary
     fred
 
-:meth:`~.Session.query` 호출에 여러 엔티티가 있다는 것을 가정하면 ``User`` 같은 전체 엔티티에 주어진 이름은
+:meth:`~.Session.query` 호출할 때 복수의 엔티티가 있는 경우에는
+``User`` 같은 전체 엔티티에 주어진 이름을
 :func:`~.sqlalchemy.orm.aliased`\ 를 사용해 제어할 수 있다:
 
 .. sourcecode:: python+sql
@@ -639,8 +643,8 @@ SELECT를 이용하면 데이터베이스에서 생성된 변경 사항을 볼 �
     <User(name='mary', fullname='Mary Contrary', password='xxg527')>
     <User(name='fred', fullname='Fred Flinstone', password='blah')>
 
-기본적인 :class:`~sqlalchemy.orm.query.Query` 동작은 LIMIT과 OFFSET 출력 포함하며,
-가장 편리하게 파이썬 어레이 슬라이스 이용하고 일반적으로 ORDER BY와 함께 사용된다:
+파이썬 배열 슬라이싱을 써서  :class:`~sqlalchemy.orm.query.Query`\ 에
+LIMIT과 OFFSET 옵션을 포함시킬 수 있고 ORDER BY와 함께 쓸 수도 있다:
 
 .. sourcecode:: python+sql
 
@@ -656,8 +660,8 @@ SELECT를 이용하면 데이터베이스에서 생성된 변경 사항을 볼 �
     <User(name='wendy', fullname='Wendy Williams', password='foobar')>
     <User(name='mary', fullname='Mary Contrary', password='xxg527')>
 
-결과 필터링은 키워드 인자를 사용하는 :func:`~sqlalchemy.orm.query.Query.filter_by`\ 를
-사용할 수도 있고:
+:func:`~sqlalchemy.orm.query.Query.filter_by`\ 에 키워드 인수를 넣어
+결과를 필터링할 수도 있다.:
 
 .. sourcecode:: python+sql
 
@@ -669,9 +673,8 @@ SELECT를 이용하면 데이터베이스에서 생성된 변경 사항을 볼 �
     ('Ed Jones',)
     {stop}ed
 
-플렉서블한 SQL 표현 언어 구조를 사용하는 :func:`~sqlalchemy.orm.query.Query.filter`\ 를
-사용할 수도 있다. 이 경우 매핑된 클래스의 클래스 수준 속성과 함께 일반 파이썬 연산자를
-사용할 수 있게 해준:
+더 유연한 SQL 표현식 언어 구조를 사용하는 :func:`~sqlalchemy.orm.query.Query.filter`\ 를
+사용할 수도 있다. 이 경우 매핑된 클래스의 클래스 수준 속성과 함께 일반 파이썬 연산자도 쓸 수 있다.:
 
 .. sourcecode:: python+sql
 
@@ -683,11 +686,12 @@ SELECT를 이용하면 데이터베이스에서 생성된 변경 사항을 볼 �
     ('Ed Jones',)
     {stop}ed
 
-:class:`~sqlalchemy.orm.query.Query` 객체는 완전히 **generative** 하며, 이는
-대부분의 메서드 호출은 새로운 :class:`~sqlalchemy.orm.query.Query` 객체를 리턴하며 조건을
-더 추가시킬 수 있다. 예를 들어 전체 이름이 "Ed Jones"고 이름이 "ed"인 사용자를 쿼리하고 싶으면,
-:func:`~sqlalchemy.orm.query.Query.filter`\ 를 두 번 호출하면 되며, 조건은 ``AND`` 사용해서
-결합된다:
+:class:`~sqlalchemy.orm.query.Query` 객체는 완전히 **생성적(generative)** 이다.
+즉, 대부분의 메서드 호출 결과는  :class:`~sqlalchemy.orm.query.Query` 객체로 반환된다.
+따라서 다음처럼 조건을 더 추가시킬 수 있다.
+예를 들어 전체 이름이 "Ed Jones"고 이름이 "ed"인 사용자를 쿼리하고 싶으면,
+:func:`~sqlalchemy.orm.query.Query.filter`\ 를 두 번 호출하면 되며,
+조건은 ``AND``\ 를 사용하여 결합된다:
 
 .. sourcecode:: python+sql
 
@@ -723,8 +727,8 @@ Common Filter Operators
     query.filter(User.name.like('%ed%'))
 
  .. note:: :meth:`.ColumnOperators.like`\ 는 LIKE 연산자를 렌더링하며,
-    몇몇 백엔드 에서는 대소문자를 구별하지 않고, 몇몇 백엔드에서는
-    대소문자를 구별한다. 대소문자를 구별하지 않는 비교를 보장하려면
+    몇몇 백엔드에서는 대소문자를 구별하지 않고, 몇몇 백엔드에서는
+    대소문자를 구별한다. 대소문자를 구별하지 않는 비교를 하려면
     :meth:`.ColumnOperators.ilike`\ 를 사용하라.
 
 * :meth:`ILIKE <.ColumnOperators.ilike>` (case-insensitive LIKE)::
@@ -732,8 +736,8 @@ Common Filter Operators
     query.filter(User.name.ilike('%ed%'))
 
  .. note:: 대부분의 백엔드는 ILIKE를 직접적으로 지원하지 않는다. 그런 경우
-    :meth:`.ColumnOperators.ilike` 연산자는 LIKE를 각 피연산자에 적용된 LOWER SQL 함수와
-    결합한 표현을 렌더링한다.
+    :meth:`.ColumnOperators.ilike` 연산자는 LIKE를 각 피연산자에 적용된
+    하위 레벨 SQL 함수와 결합한 표현으로 렌더링한다.
 
 * :meth:`IN <.ColumnOperators.in_>`::
 
@@ -794,13 +798,13 @@ Common Filter Operators
     :meth:`~.ColumnOperators.match`\ 는 데이터베이스 지정 ``MATCH``\ 나 ``CONTAINS`` 함수를
     사용한다; 이 동작은 백엔드에 따라 다르며, SQLite 같은 몇몇 백엔드에서는 사용할 수 없다.
 
-Returning Lists and Scalars
+리스트와 스칼라 반환
 ---------------------------
 
-:class:`.Query`\ 의 많은 메서드는 즉시 SQL을 출력하고 로드된 데이터베이스 결과를 포함하는 값을
-리턴한다. 아래는 간단한 예시이다:
+:class:`.Query`\ 의 메서드 대부분은 즉시 SQL을 출력하고
+로드된 데이터베이스 결과를 포함하는 값을 반환한다. 아래는 간단한 예시이다:
 
-* :meth:`~.Query.all()`\ 는 리스트를 리턴한다:
+* :meth:`~.Query.all()`\ 는 리스트를 반환한다:
 
   .. sourcecode:: python+sql
 
@@ -816,7 +820,7 @@ Returning Lists and Scalars
       {stop}[<User(name='ed', fullname='Ed Jones', password='f8s7ccs')>,
             <User(name='fred', fullname='Fred Flinstone', password='blah')>]
 
-* :meth:`~.Query.first()`\는 한계를 하나로 조정하고 첫 번째 결과를 스칼라로 리턴합니다:
+* :meth:`~.Query.first()`\는 limit를 하나로 정하여 첫 번째 결과만 스칼라로 반환한다:
 
   .. sourcecode:: python+sql
 
@@ -831,7 +835,8 @@ Returning Lists and Scalars
       ('%ed', 1, 0)
       {stop}<User(name='ed', fullname='Ed Jones', password='f8s7ccs')>
 
-* :meth:`~.Query.one()`\ 는 모든 행을 완전히 불러오고, 정확히 한 객체 아이덴티티나 컴포짓 행이 결과에
+* :meth:`~.Query.one()`\ 는 모든 행을 완전히 불러오고,
+  정확한 객체 아이덴티티나 복합 결과 행이 결과에
   존재하지 않으면 에러를 발생시킨다. 여러 행이 찾아진 경우:
 
   .. sourcecode:: python+sql
@@ -851,15 +856,18 @@ Returning Lists and Scalars
       NoResultFound: No row was found for one()
 
   :meth:`~.Query.one` 메서드는 "no items found"와 "multiple items found"를 다르게
-  처리하기를 기대하는 시스템에 유용하다; 예를 들어, 찾은 결과가 없을 때 "404 not found"를
-  발생키길 원하고 여러 결과가 찾아졌을 경우 어플리케이션 에러를 발생시키기 원하는 RESTful 웹서비스.
+  처리하기를 기대하는 시스템에 쓸모가 있다; 예를 들어,
+  찾은 결과가 하나도 없을 때는 "404 not found"를 발생키길 원하고
+  찾은 결과가 하나이면 어플리케이션 에러를 발생시키기 원하는 RESTful 웹서비스에
+  유용한다.
 
-* :meth:`~.Query.one_or_none`\ 는 :meth:`~.Query.one`\ 와 비슷하지만, 결과를 찾지 못했을 때,
-  에러를 발생시키지 않는 다는 점이 다르다; 그냥 ``None`` 값을 리턴한다. 그러나, :meth:`~.Query.one` 처럼
+* :meth:`~.Query.one_or_none`\ 는 :meth:`~.Query.one`\ 와 비슷하지만,
+  결과를 찾지 못했을 때 에러를 발생시키지 않거 그냥 ``None`` 값을 반환한다.
+  그러나, :meth:`~.Query.one` 처럼
   여러 결과를 찾았을 경우 에러를 발생시킨다.
 
 * :meth:`~.Query.scalar`\ 는 :meth:`~.Query.one` 메서드를 불러오며, 성공시에
-  행의 첫 번째 컬럼을 리턴한다:
+  행의 첫 번째 컬럼을 반환한다:
 
   .. sourcecode:: python+sql
 
@@ -874,8 +882,8 @@ Returning Lists and Scalars
 
 .. _orm_tutorial_literal_sql:
 
-Using Textual SQL
------------------
+SQL 문자열 직접 사용
+----------------------------------
 
 리터럴 스트링은 :func:`~.expression.text` 구조로 사용을 명시함으로써
 :class:`~sqlalchemy.orm.query.Query`\ 에서 플렉서블하게
@@ -936,7 +944,7 @@ Using Textual SQL
 특정 이름과 쉽게 일치하지 않는 익명화된 ORM 구조를 사용할 때는 다루기 어려워질 수 있다.
 추가적으로, 결과 행들을 처리할 때 필요하다고 판단되는 매핑된 컬럼에 존재하는 타이핑 동작이
 존재한다. 이 경우, :func:`~.expression.text` 구조가 텍스트 형식 SQL을 위치에 따라 Core나 ORM 매핑된
-컬럼 표현식에 연결해준다; 컬럼 표현식을 위치 인자로 :meth:`.TextClause.columns`\ 에 전달함으로써
+컬럼 표현식에 연결해준다; 컬럼 표현식을 위치 인수로 :meth:`.TextClause.columns`\ 에 전달함으로써
 작업을 수행할 수 있다:
 
 .. sourcecode:: python+sql
@@ -955,7 +963,7 @@ Using Textual SQL
     일치하게 될 컬럼 표현식을 받아들여서 SQL 명령에서 컬럼 이름이 매치되거나 유니크해야 할
     필요가 없어졌다.
 
-:func:`~.expression.text` 구조에서 selecting을 할 때, :class:`.Query`\ 는 여전히 리턴될
+:func:`~.expression.text` 구조에서 selecting을 할 때, :class:`.Query`\ 는 여전히 반환될
 엔티티와 컬럼을 지정할 수 있다; 다른 경우처럼 ``query(User)`` 대신에 개별적으로 컬럼을 요청할 수도 있다:
 
 .. sourcecode:: python+sql
@@ -997,10 +1005,10 @@ Counting
     :meth:`.Query.count`\ 는 서브 쿼리가 기존 쿼리에 필요한지를 추측하려고 할 때는
     매우 복잡한 메서드가 됐었고 몇몇 특이한 경우에는 올바르게 작동하지 않았다.
     이제 간단한 서브 쿼리를 사용하기 때문에 길이도 두 줄밖에 되지 않고 항상 올바른 답을
-    리턴한다. 특정한 명령이 서브 쿼리가 존재하는 것을 절대 용납하지 않는 경우
+    반환한다. 특정한 명령이 서브 쿼리가 존재하는 것을 절대 용납하지 않는 경우
     ``func.count()``\ 를 사용하라.
 
-:meth:`~.Query.count()` 메서드는 SQL 명령이 얼마만큼의 행을 리턴해야 하는지를 결정하기
+:meth:`~.Query.count()` 메서드는 SQL 명령이 얼마만큼의 행을 반환해야 하는지를 결정하기
 위해 사용된다. 위에 있는 생성된 SQL을 보면 SQLAlchemy는 항상 쿼리 하려는 것을 서브쿼리에 넣고,
 그것으로부터 행을 센다. 몇몇 경우에는 더 간단한 ``SELECT count(*) FROM table``\ 로 축소될 수도
 있다. 그러나, 최신 버전의 SQLAlchemy는 더 명시적인 수단을 사용해서 정확한 SQL을 내보낼 수 있기 때문에
@@ -1008,7 +1016,7 @@ Counting
 
 특별히 "things to be counted"를 표시해야 하는 상황의 경우, "count" 함수를
 :attr:`~sqlalchemy.sql.expression.func` 구조에서 이용 가능한 ``func.count()`` 표현을
-사용해서 직접 지정할 수 있다. 아래에서는0 각각의 user name의 카운트를 리턴하기 위해서 사용했다:
+사용해서 직접 지정할 수 있다. 아래에서는0 각각의 user name의 카운트를 반환하기 위해서 사용했다:
 
 .. sourcecode:: python+sql
 
@@ -1107,10 +1115,10 @@ Building a Relationship
 
 다른 클래스와 연관된 :func:`.relationship`\ 의 인수는 Decalarative system이
 사용중이면 문자열을 사용해서 지정할 수 있다. 모든 매핑이 완로되면, 이 문자열들은
-실제 인자를 생성하기 위한 파이썬 표현식으로 인식되며 위의 경우에서는 ``User`` 클래스가 된다.
+실제 인수를 생성하기 위한 파이썬 표현식으로 인식되며 위의 경우에서는 ``User`` 클래스가 된다.
 평가 중에 허용되는 이름은 선언된 base로 생성된 모든 클래스의 이름을 포함한다.
 
-인자 스타일에 대한 더 자세한 정보는 :func:`.relationship`\ 에 관한 독스트링을 참고하라.
+인수 스타일에 대한 더 자세한 정보는 :func:`.relationship`\ 에 관한 독스트링을 참고하라.
 
 .. topic:: Did you know ?
 
@@ -1361,7 +1369,7 @@ user 행을 돌려 받았다::
 
 :class:`~sqlalchemy.orm.query.Query`\ 를 사용해서, 이러한 명령을 내부에서 밖으로 생성할 수 있다.
 ``statement`` 접근자는 특정한 :class:`~sqlalchemy.orm.query.Query`\ 에 의해 생성된 명령을 나타내는
-SQL 표현식을 리턴한다. - 이것은 :func:`~.expression.select` 구조의 인스턴스이며
+SQL 표현식을 반환한다. - 이것은 :func:`~.expression.select` 구조의 인스턴스이며
 :ref:`sqlexpression_toplevel`\ 에 설명되어 있다::
 
     >>> from sqlalchemy.sql import func
@@ -1437,7 +1445,7 @@ Using EXISTS
 ------------
 
 SQL의 EXISTS 키워드는 부울리언 오퍼레이터로 주어진 표현식이 행을 포함하고 있으면
-참을 리턴한다. 이것은 join을 대신해서 많은 시나리오에서 사용될 수 있으며 연결된
+참을 반환한다. 이것은 join을 대신해서 많은 시나리오에서 사용될 수 있으며 연결된
 테이블에 대응하는 행이 없는 행을 찾을 때에도 유용하다.
 
 명시적 EXISTS 구조는, 아래와 같이 생겼다:
@@ -1637,7 +1645,7 @@ Joined Load
 
 OUTER JOIN이 두 행을 결과로 가지더라도, 우리는 여전히
 하나의 ``User`` 인스턴스만 돌려받는다. 왜냐하면 :class:`.Query`\ 가 객체 아이덴티티에 기반을 둔 "uniquing" 전략을
-리턴된 개체에 적용하고 있기 때문이다. 이것은 특히 join된 eager loading이 쿼리 결과에
+반환된 개체에 적용하고 있기 때문이다. 이것은 특히 join된 eager loading이 쿼리 결과에
 영향을 미치지않고 적용될 수 있게 한다.
 
 :func:`.joinedload`\ 이 오랫동안 존재해왔던 반면에 :func:`.subqueryload`\ 새로 등장한 eager loading
@@ -1891,7 +1899,7 @@ Building a Many To Many Relationship
     ... )
 
 위에서 우리는 :class:`.Table`\ 를 직접 선언하는 것이 매핑된 클래스를 생성하는 것과 조금 다르다는
-사실을 볼 수 있다. :class:`.Table`\ 는 컨스트럭서 함수로, 각각의 개별 :class:`.Column` 인자는
+사실을 볼 수 있다. :class:`.Table`\ 는 컨스트럭서 함수로, 각각의 개별 :class:`.Column` 인수는
 콤마로 나뉘어져 있다. :class:`.Column` 객체는 할당된 속성 이름에서 가져오는 것이 아니라 명시적으로 이름을
 제공받는다.
 
@@ -1938,7 +1946,7 @@ Building a Many To Many Relationship
     Declarative를 사용할 때 이것은 선택적인 부분이다!
 
 위에서, 다대다 relationship은 ``BlogPost.keywords``\ 이다. 다대다 relationship의
-기능을 정의하는 것은 ``secondary`` 키워드 인자이며 이 인자는 연결 테이블을 나타내는
+기능을 정의하는 것은 ``secondary`` 키워드 인수이며 이 인수는 연결 테이블을 나타내는
 :class:`~sqlalchemy.schema.Table` 객체를 참조한다.
 이 테이블은 relationship의 양쪽을 참조하는 컬럼만 포함한다; 만약 자신의 primary key나 다른 테이블의 foreign key
 같은 다른 컬럼을 포함하고 있다면 SQLAlchemy는 "association object"라고 하는 다른 사용 패턴을 요구한다.
