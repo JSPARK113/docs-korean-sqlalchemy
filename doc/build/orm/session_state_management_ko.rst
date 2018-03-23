@@ -3,15 +3,15 @@
 
 .. _session_object_states:
 
-객체 상테에 대한 간단한 소개
+객체 상태에 대한 간단한 소개
 ------------------------------------------------------------
 
 객체가 세션에서 가질 수 있는 상태(state)에 대해 알고 있으면 도움이 된다.
 
-* **전이(Transient)** - 객체가 세션안에 있지 않고 데이터베이스에도 저장되어 있지 않는 상태.
+* **임시(Transient)** - 객체가 세션안에 있지 않고 데이터베이스에도 저장되어 있지 않는 상태.
   객체와 ORM의 관계는 오로지 객체의 클래스가 ``mapper()`` 메서드를 가지고 있다는 것 뿐이다.
 
-* **대기(Pending)** - :meth:`~.Session.add`\ 를 호출하면 전이 상태의 객체를 대기 상태로 만든다.
+* **대기(Pending)** - :meth:`~.Session.add`\ 를 호출하면 임시 상태의 객체를 대기 상태로 만든다.
   아직 데이터베이스로 정보가 전달되지 않았지만 다음번에 데이터 flush가 발생하면
   데이터베이스로 정보가 전달되게 된다.
 
@@ -20,13 +20,12 @@
   (또는 다른 세션의 영속 상태 개체를 다른 로컬 세션으로 옮기면)
   대기 상태의 객체가 영속 상태가 된다.
 
-* **삭제(Deleted)** - flush 내부에서 삭제되었지만 트랜젝션이 완료되지 못한 객체의 상태.
+* **삭제(Deleted)** - flush에서 삭제되었지만 트랜젝션이 완료되지 못한 객체의 상태.
   이 상태의 객체는 본질적으로 대기(pending) 상태와 정반대이다.
   세션의 트랜잭션이 커밋되면 이 객체는 분리(detached) 상태가 된다.
   만약 반대로 트랜잭션이 롤백되면 삭제 상태의 객체는 도로 영속 상태로 돌아간다.
 
-  .. versionchanged:: 1.1 The 'deleted' state is a newly added session
-     object state distinct from the 'persistent' state.
+  .. versionchanged:: 1.1 버전에서 '삭제' 상태가 '영속' 상태와 구별되어 새로 추가되었다.
 
 * **분리(Detached)** - 데이터베이스의 레코드에 대응되었었지만 현재 어떤 세션에도
   속해있지 않는 객체의 상태. 분리된 객체는 데이터베이스 객체에 대한 마커(marker)를
@@ -34,11 +33,9 @@
   이 데이터베이스 객체가 존재하는지 확인할 수 없다. 분리 상태의 객체도 사용할 수는
   있지만 로드되지 않은 속성을 새로 로드할 수는 없다.
 
-
-가능한 상태의 변화에 대해 더 자세히 알고 싶으면 
-For a deeper dive into all possible state transitions, see the
-section :ref:`session_lifecycle_events` which describes each transition
-as well as how to programmatically track each one.
+가능한 상태의 전이에 대해 더 자세히 알고 싶으면
+각각의 상태가 어떻게 바뀌고 어떻게 프로그램적으로 추적할 수 있는지 설명한
+:ref:`session_lifecycle_events` 절을 참조한다.
 
 Getting the Current State of an Object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

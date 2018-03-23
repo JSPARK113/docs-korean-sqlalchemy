@@ -464,12 +464,13 @@ SQLAlchemy는 기본적으로 이전 트랜잭션으로부터 얻은 데이터�
 .. topic:: 세션 객체의 상태
 
    ``User`` 객체가 :class:`.Session`\ 밖에서, :class:`.Session`\ 안으로 primary key 없이
-   이동하면서 삽입되었고, 4가지 중 3가지의 가능한 "객체 상태"(**transient**, **pending**, **persistent**)
-   사이에서 움직였다. 이 상태들과 그 의미를 알고 있는 것은 도움이 되므로 :ref:`session_object_states`\ 에서
-   간단한 개요를 읽어 보기 바란다.
+   이동하면서 삽입되었고, 4가지 중 3가지의 가능한 "객체 상태"
+   (**임시(transient)**, **대기(pending)**, **영속(persistent)**)
+   사이에서 움직였다. 이 상태들과 그 의미를 알고 있는 것은 도움이 되므로
+   :ref:`session_object_states`\ 에 있는 간단한 설명를 읽어 보기 바란다.
 
-Rolling Back
-============
+롤백(roll back)
+========================
 :class:`~sqlalchemy.orm.session.Session`\ 은 트랜잭션 내에서 작동하기 때문에
 변경한 것을 롤백할 수도 있다. 되돌릴 변경사항 두 개를 만들어보자;
 ``ed_user``\ 의 사용자 이름을 ``Edwardo``\ 로 설정한다:
@@ -525,7 +526,7 @@ Rolling Back
     >>> fake_user in session
     False
 
-SELECT를 이용하면 데이터베이스에서 생성된 변경사항을 볼 수 있다:
+SELECT를 이용하면 데이터베이스에서 생성된 변경 사항을 볼 수 있다:
 
 .. sourcecode:: python+sql
 
@@ -541,7 +542,7 @@ SELECT를 이용하면 데이터베이스에서 생성된 변경사항을 볼 �
 
 .. _ormtutorial_querying:
 
-Querying
+쿼리
 ========
 
 :class:`~sqlalchemy.orm.query.Query` 객체는
