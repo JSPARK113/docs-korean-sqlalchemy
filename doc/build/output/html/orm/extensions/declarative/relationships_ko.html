@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Configuring Relationships &mdash; SQLAlchemy 1.2.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/changelog.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../../_static/sphinx_paramlinks.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+        <link rel="copyright" title="Copyright" href="../../../copyright.html"/>
+    <link rel="top" title="SQLAlchemy 1.2.4 documentation" href="../../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../contents_ko.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro_ko.html">개요</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index_ko.html">SQLAlchemy ORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core/index_ko.html">SQLAlchemy core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dialects/index_ko.html">다이얼렉트(Dialects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq/index_ko.html">자주 물어보는 질문</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../errors_ko.html">오류 메세지</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog/index_ko.html">변경사항과 마이그레이션</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../contents_ko.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../contents_ko.html">Docs</a> &raquo;</li>
+        
+      <li>Configuring Relationships</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy/blob/docs-korean/doc/build/orm/extensions/declarative/relationships_ko.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="configuring-relationships">
+<span id="declarative-configuring-relationships"></span><h1>Configuring Relationships<a class="headerlink" href="#configuring-relationships" title="Permalink to this headline">¶</a></h1>
+<p>Relationships to other classes are done in the usual way, with the added
+feature that the class specified to <a class="reference internal" href="../../relationship_api_ko.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal"><span class="pre">relationship()</span></code></a>
+may be a string name.  The “class registry” associated with <code class="docutils literal"><span class="pre">Base</span></code>
+is used at mapper compilation time to resolve the name into the actual
+class object, which is expected to have been defined once the mapper
+configuration is used:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;users&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">addresses</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Address&quot;</span><span class="p">,</span> <span class="n">backref</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Address</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;addresses&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;users.id&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Column constructs, since they are just that, are immediately usable,
+as below where we define a primary join condition on the <code class="docutils literal"><span class="pre">Address</span></code>
+class using them:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Address</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;addresses&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;users.id&#39;</span><span class="p">))</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">primaryjoin</span><span class="o">=</span><span class="n">user_id</span> <span class="o">==</span> <span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In addition to the main argument for <a class="reference internal" href="../../relationship_api_ko.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal"><span class="pre">relationship()</span></code></a>,
+other arguments which depend upon the columns present on an as-yet
+undefined class may also be specified as strings.  These strings are
+evaluated as Python expressions.  The full namespace available within
+this evaluation includes all classes mapped for this declarative base,
+as well as the contents of the <code class="docutils literal"><span class="pre">sqlalchemy</span></code> package, including
+expression functions like <a class="reference internal" href="../../../core/sqlelement_ko.html#sqlalchemy.sql.expression.desc" title="sqlalchemy.sql.expression.desc"><code class="xref py py-func docutils literal"><span class="pre">desc()</span></code></a> and
+<a class="reference internal" href="../../../core/sqlelement_ko.html#sqlalchemy.sql.expression.func" title="sqlalchemy.sql.expression.func"><code class="xref py py-attr docutils literal"><span class="pre">func</span></code></a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="c1"># ....</span>
+    <span class="n">addresses</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Address&quot;</span><span class="p">,</span>
+                         <span class="n">order_by</span><span class="o">=</span><span class="s2">&quot;desc(Address.email)&quot;</span><span class="p">,</span>
+                         <span class="n">primaryjoin</span><span class="o">=</span><span class="s2">&quot;Address.user_id==User.id&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For the case where more than one module contains a class of the same name,
+string class names can also be specified as module-qualified paths
+within any of these string expressions:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="c1"># ....</span>
+    <span class="n">addresses</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;myapp.model.address.Address&quot;</span><span class="p">,</span>
+                         <span class="n">order_by</span><span class="o">=</span><span class="s2">&quot;desc(myapp.model.address.Address.email)&quot;</span><span class="p">,</span>
+                         <span class="n">primaryjoin</span><span class="o">=</span><span class="s2">&quot;myapp.model.address.Address.user_id==&quot;</span>
+                                        <span class="s2">&quot;myapp.model.user.User.id&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The qualified path can be any partial path that removes ambiguity between
+the names.  For example, to disambiguate between
+<code class="docutils literal"><span class="pre">myapp.model.address.Address</span></code> and <code class="docutils literal"><span class="pre">myapp.model.lookup.Address</span></code>,
+we can specify <code class="docutils literal"><span class="pre">address.Address</span></code> or <code class="docutils literal"><span class="pre">lookup.Address</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="c1"># ....</span>
+    <span class="n">addresses</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;address.Address&quot;</span><span class="p">,</span>
+                         <span class="n">order_by</span><span class="o">=</span><span class="s2">&quot;desc(address.Address.email)&quot;</span><span class="p">,</span>
+                         <span class="n">primaryjoin</span><span class="o">=</span><span class="s2">&quot;address.Address.user_id==&quot;</span>
+                                        <span class="s2">&quot;User.id&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 0.8: </span>module-qualified paths can be used when specifying string arguments
+with Declarative, in order to specify specific modules.</p>
+</div>
+<p>Two alternatives also exist to using string-based attributes.  A lambda
+can also be used, which will be evaluated after all mappers have been
+configured:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+    <span class="n">addresses</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+                         <span class="n">order_by</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">desc</span><span class="p">(</span><span class="n">Address</span><span class="o">.</span><span class="n">email</span><span class="p">),</span>
+                         <span class="n">primaryjoin</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">Address</span><span class="o">.</span><span class="n">user_id</span><span class="o">==</span><span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or, the relationship can be added to the class explicitly after the classes
+are available:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">User</span><span class="o">.</span><span class="n">addresses</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="n">Address</span><span class="p">,</span>
+                          <span class="n">primaryjoin</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">user_id</span><span class="o">==</span><span class="n">User</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="configuring-many-to-many-relationships">
+<span id="declarative-many-to-many"></span><h2>Configuring Many-to-Many Relationships<a class="headerlink" href="#configuring-many-to-many-relationships" title="Permalink to this headline">¶</a></h2>
+<p>Many-to-many relationships are also declared in the same way
+with declarative as with traditional mappings. The
+<code class="docutils literal"><span class="pre">secondary</span></code> argument to
+<a class="reference internal" href="../../relationship_api_ko.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal"><span class="pre">relationship()</span></code></a> is as usual passed a
+<a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal"><span class="pre">Table</span></code></a> object, which is typically declared in the
+traditional way.  The <a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal"><span class="pre">Table</span></code></a> usually shares
+the <a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.MetaData" title="sqlalchemy.schema.MetaData"><code class="xref py py-class docutils literal"><span class="pre">MetaData</span></code></a> object used by the declarative base:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">keywords</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span>
+    <span class="s1">&#39;keywords&#39;</span><span class="p">,</span> <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+    <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;author_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;authors.id&#39;</span><span class="p">)),</span>
+    <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;keyword_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;keywords.id&#39;</span><span class="p">))</span>
+    <span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;authors&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">keywords</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Keyword&quot;</span><span class="p">,</span> <span class="n">secondary</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Like other <a class="reference internal" href="../../relationship_api_ko.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal"><span class="pre">relationship()</span></code></a> arguments, a string is accepted
+as well, passing the string name of the table as defined in the
+<code class="docutils literal"><span class="pre">Base.metadata.tables</span></code> collection:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;authors&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">keywords</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Keyword&quot;</span><span class="p">,</span> <span class="n">secondary</span><span class="o">=</span><span class="s2">&quot;keywords&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As with traditional mapping, its generally not a good idea to use
+a <a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal"><span class="pre">Table</span></code></a> as the “secondary” argument which is also mapped to
+a class, unless the <a class="reference internal" href="../../relationship_api_ko.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal"><span class="pre">relationship()</span></code></a> is declared with <code class="docutils literal"><span class="pre">viewonly=True</span></code>.
+Otherwise, the unit-of-work system may attempt duplicate INSERT and
+DELETE statements against the underlying table.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.2.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

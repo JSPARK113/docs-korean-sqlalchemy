@@ -1,0 +1,321 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Relationship Configuration &mdash; SQLAlchemy 1.2.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="SQLAlchemy 1.2.4 documentation" href="../index.html"/>
+        <link rel="up" title="SQLAlchemy ORM" href="index_ko.html"/>
+        <link rel="next" title="Basic Relationship Patterns" href="basic_relationships.html"/>
+        <link rel="prev" title="Class Mapping API" href="mapping_api.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents_ko.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro_ko.html">개요</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index_ko.html">SQLAlchemy ORM</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorial_ko.html">ORM 튜토리얼</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapper_config.html">Mapper Configuration</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Relationship Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="basic_relationships.html">Basic Relationship Patterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="self_referential.html">Adjacency List Relationships</a></li>
+<li class="toctree-l3"><a class="reference internal" href="backref.html">Linking Relationships with Backref</a></li>
+<li class="toctree-l3"><a class="reference internal" href="join_conditions.html">Configuring how Relationship Joins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="collections.html">Collection Configuration and Techniques</a></li>
+<li class="toctree-l3"><a class="reference internal" href="relationship_persistence.html">Special Relationship Persistence Patterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="relationship_api.html">Relationships API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="loading_objects.html">Loading Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session.html">Using the Session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending.html">Events and Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extensions/index.html">ORM Extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">ORM Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index_ko.html">SQLAlchemy core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index_ko.html">다이얼렉트(Dialects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index_ko.html">자주 물어보는 질문</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors_ko.html">오류 메세지</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index_ko.html">변경사항과 마이그레이션</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents_ko.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents_ko.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index_ko.html">SQLAlchemy ORM</a> &raquo;</li>
+        
+      <li>Relationship Configuration</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy/blob/docs-korean/doc/build/orm/relationships.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-sqlalchemy.orm"></span><div class="section" id="relationship-configuration">
+<span id="relationship-config-toplevel"></span><h1>Relationship Configuration<a class="headerlink" href="#relationship-configuration" title="Permalink to this headline">¶</a></h1>
+<p>This section describes the <a class="reference internal" href="relationship_api_ko.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal"><span class="pre">relationship()</span></code></a> function and in depth discussion
+of its usage.   For an introduction to relationships, start with the
+<a class="reference internal" href="tutorial_ko.html#ormtutorial-toplevel"><span class="std std-ref">ORM 튜토리얼</span></a> and head into <a class="reference internal" href="tutorial_ko.html#orm-tutorial-relationship"><span class="std std-ref">릴레이션 생성</span></a>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="basic_relationships.html">Basic Relationship Patterns</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic_relationships.html#one-to-many">One To Many</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_relationships.html#many-to-one">Many To One</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_relationships.html#one-to-one">One To One</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_relationships.html#many-to-many">Many To Many</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_relationships.html#association-object">Association Object</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="self_referential.html">Adjacency List Relationships</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="self_referential.html#composite-adjacency-lists">Composite Adjacency Lists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="self_referential.html#self-referential-query-strategies">Self-Referential Query Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="self_referential.html#configuring-self-referential-eager-loading">Configuring Self-Referential Eager Loading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="backref.html">Linking Relationships with Backref</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="backref.html#backref-arguments">Backref Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backref.html#one-way-backrefs">One Way Backrefs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="join_conditions.html">Configuring how Relationship Joins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="join_conditions.html#handling-multiple-join-paths">Handling Multiple Join Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="join_conditions.html#specifying-alternate-join-conditions">Specifying Alternate Join Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="join_conditions.html#creating-custom-foreign-conditions">Creating Custom Foreign Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="join_conditions.html#using-custom-operators-in-join-conditions">Using custom operators in join conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="join_conditions.html#overlapping-foreign-keys">Overlapping Foreign Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="join_conditions.html#non-relational-comparisons-materialized-path">Non-relational Comparisons / Materialized Path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="join_conditions.html#self-referential-many-to-many-relationship">Self-Referential Many-to-Many Relationship</a></li>
+<li class="toctree-l2"><a class="reference internal" href="join_conditions.html#composite-secondary-joins">Composite “Secondary” Joins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="join_conditions.html#relationship-to-non-primary-mapper">Relationship to Non Primary Mapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="join_conditions.html#building-query-enabled-properties">Building Query-Enabled Properties</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">Collection Configuration and Techniques</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#working-with-large-collections">Working with Large Collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#customizing-collection-access">Customizing Collection Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#custom-collection-implementations">Custom Collection Implementations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#collection-internals">Collection Internals</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="relationship_persistence.html">Special Relationship Persistence Patterns</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="relationship_persistence.html#rows-that-point-to-themselves-mutually-dependent-rows">Rows that point to themselves / Mutually Dependent Rows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="relationship_persistence.html#mutable-primary-keys-update-cascades">Mutable Primary Keys / Update Cascades</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="relationship_api.html">Relationships API</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="basic_relationships.html" class="btn btn-neutral float-right" title="Basic Relationship Patterns" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="mapping_api.html" class="btn btn-neutral" title="Class Mapping API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

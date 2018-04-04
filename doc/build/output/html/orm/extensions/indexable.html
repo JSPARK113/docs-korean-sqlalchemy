@@ -1,0 +1,473 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Indexable &mdash; SQLAlchemy 1.2.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/changelog.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/sphinx_paramlinks.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="SQLAlchemy 1.2.4 documentation" href="../../index.html"/>
+        <link rel="up" title="ORM Extensions" href="index.html"/>
+        <link rel="next" title="Alternate Class Instrumentation" href="instrumentation.html"/>
+        <link rel="prev" title="Hybrid Attributes" href="hybrid.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../contents_ko.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro_ko.html">개요</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index_ko.html">SQLAlchemy ORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../core/index_ko.html">SQLAlchemy core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dialects/index_ko.html">다이얼렉트(Dialects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/index_ko.html">자주 물어보는 질문</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../errors_ko.html">오류 메세지</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/index_ko.html">변경사항과 마이그레이션</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents_ko.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../contents_ko.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index_ko.html">SQLAlchemy ORM</a> &raquo;</li>
+        
+          <li><a href="index.html">ORM Extensions</a> &raquo;</li>
+        
+      <li>Indexable</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy/blob/docs-korean/doc/build/orm/extensions/indexable.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-sqlalchemy.ext.indexable">
+<span id="indexable"></span><span id="indexable-toplevel"></span><h1>Indexable<a class="headerlink" href="#module-sqlalchemy.ext.indexable" title="Permalink to this headline">¶</a></h1>
+<p>Define attributes on ORM-mapped classes that have “index” attributes for
+columns with <a class="reference internal" href="../../core/type_api_ko.html#sqlalchemy.types.Indexable" title="sqlalchemy.types.Indexable"><code class="xref py py-class docutils literal"><span class="pre">Indexable</span></code></a> types.</p>
+<p>“index” means the attribute is associated with an element of an
+<a class="reference internal" href="../../core/type_api_ko.html#sqlalchemy.types.Indexable" title="sqlalchemy.types.Indexable"><code class="xref py py-class docutils literal"><span class="pre">Indexable</span></code></a> column with the predefined index to access it.
+The <a class="reference internal" href="../../core/type_api_ko.html#sqlalchemy.types.Indexable" title="sqlalchemy.types.Indexable"><code class="xref py py-class docutils literal"><span class="pre">Indexable</span></code></a> types include types such as
+<a class="reference internal" href="../../core/type_basics_ko.html#sqlalchemy.types.ARRAY" title="sqlalchemy.types.ARRAY"><code class="xref py py-class docutils literal"><span class="pre">ARRAY</span></code></a>, <a class="reference internal" href="../../core/type_basics_ko.html#sqlalchemy.types.JSON" title="sqlalchemy.types.JSON"><code class="xref py py-class docutils literal"><span class="pre">JSON</span></code></a> and
+<a class="reference internal" href="../../dialects/postgresql.html#sqlalchemy.dialects.postgresql.HSTORE" title="sqlalchemy.dialects.postgresql.HSTORE"><code class="xref py py-class docutils literal"><span class="pre">HSTORE</span></code></a>.</p>
+<p>The <a class="reference internal" href="indexable_ko.html#module-sqlalchemy.ext.indexable" title="sqlalchemy.ext.indexable"><code class="xref py py-mod docutils literal"><span class="pre">indexable</span></code></a> extension provides
+<a class="reference internal" href="../../core/metadata_ko.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal"><span class="pre">Column</span></code></a>-like interface for any element of an
+<a class="reference internal" href="../../core/type_api_ko.html#sqlalchemy.types.Indexable" title="sqlalchemy.types.Indexable"><code class="xref py py-class docutils literal"><span class="pre">Indexable</span></code></a> typed column. In simple cases, it can be
+treated as a <a class="reference internal" href="../../core/metadata_ko.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal"><span class="pre">Column</span></code></a> - mapped attribute.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+<div class="section" id="synopsis">
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<p>Given <code class="docutils literal"><span class="pre">Person</span></code> as a model with a primary key and JSON data field.
+While this field may have any number of elements encoded within it,
+we would like to refer to the element called <code class="docutils literal"><span class="pre">name</span></code> individually
+as a dedicated attribute which behaves like a standalone column:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">JSON</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">declarative_base</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.indexable</span> <span class="k">import</span> <span class="n">index_property</span>
+
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;person&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">JSON</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">index_property</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Above, the <code class="docutils literal"><span class="pre">name</span></code> attribute now behaves like a mapped column.   We
+can compose a new <code class="docutils literal"><span class="pre">Person</span></code> and set the value of <code class="docutils literal"><span class="pre">name</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Alchemist&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The value is now accessible:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">person</span><span class="o">.</span><span class="n">name</span>
+<span class="go">&#39;Alchemist&#39;</span>
+</pre></div>
+</div>
+<p>Behind the scenes, the JSON field was initialized to a new blank dictionary
+and the field was set:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">person</span><span class="o">.</span><span class="n">data</span>
+<span class="go">{&quot;name&quot;: &quot;Alchemist&#39;}</span>
+</pre></div>
+</div>
+<p>The field is mutable in place:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Renamed&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">person</span><span class="o">.</span><span class="n">name</span>
+<span class="go">&#39;Renamed&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">person</span><span class="o">.</span><span class="n">data</span>
+<span class="go">{&#39;name&#39;: &#39;Renamed&#39;}</span>
+</pre></div>
+</div>
+<p>When using <a class="reference internal" href="indexable_ko.html#sqlalchemy.ext.indexable.index_property" title="sqlalchemy.ext.indexable.index_property"><code class="xref py py-class docutils literal"><span class="pre">index_property</span></code></a>, the change that we make to the indexable
+structure is also automatically tracked as history; we no longer need
+to use <a class="reference internal" href="mutable_ko.html#sqlalchemy.ext.mutable.MutableDict" title="sqlalchemy.ext.mutable.MutableDict"><code class="xref py py-class docutils literal"><span class="pre">MutableDict</span></code></a> in order to track this change
+for the unit of work.</p>
+<p>Deletions work normally as well:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">del</span> <span class="n">person</span><span class="o">.</span><span class="n">name</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">person</span><span class="o">.</span><span class="n">data</span>
+<span class="go">{}</span>
+</pre></div>
+</div>
+<p>Above, deletion of <code class="docutils literal"><span class="pre">person.name</span></code> deletes the value from the dictionary,
+but not the dictionary itself.</p>
+<p>A missing key will produce <code class="docutils literal"><span class="pre">AttributeError</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">person</span><span class="o">.</span><span class="n">name</span>
+<span class="gp">...</span>
+<span class="go">AttributeError: &#39;name&#39;</span>
+</pre></div>
+</div>
+<p>Unless you set a default value:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;person&#39;</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">JSON</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">name</span> <span class="o">=</span> <span class="n">index_property</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># See default</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">person</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="go">None</span>
+</pre></div>
+</div>
+<p>The attributes are also accessible at the class level.
+Below, we illustrate <code class="docutils literal"><span class="pre">Person.name</span></code> used to generate
+an indexed SQL criteria:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="k">import</span> <span class="n">Session</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Alchemist&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The above query is equivalent to:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Person</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Alchemist&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Multiple <a class="reference internal" href="indexable_ko.html#sqlalchemy.ext.indexable.index_property" title="sqlalchemy.ext.indexable.index_property"><code class="xref py py-class docutils literal"><span class="pre">index_property</span></code></a> objects can be chained to produce
+multiple levels of indexing:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">JSON</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">declarative_base</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.indexable</span> <span class="k">import</span> <span class="n">index_property</span>
+
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;person&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">JSON</span><span class="p">)</span>
+
+    <span class="n">birthday</span> <span class="o">=</span> <span class="n">index_property</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;birthday&#39;</span><span class="p">)</span>
+    <span class="n">year</span> <span class="o">=</span> <span class="n">index_property</span><span class="p">(</span><span class="s1">&#39;birthday&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">)</span>
+    <span class="n">month</span> <span class="o">=</span> <span class="n">index_property</span><span class="p">(</span><span class="s1">&#39;birthday&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">)</span>
+    <span class="n">day</span> <span class="o">=</span> <span class="n">index_property</span><span class="p">(</span><span class="s1">&#39;birthday&#39;</span><span class="p">,</span> <span class="s1">&#39;day&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Above, a query such as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">q</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Person</span><span class="o">.</span><span class="n">year</span> <span class="o">==</span> <span class="s1">&#39;1980&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>On a PostgreSQL backend, the above query will render as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SELECT</span> <span class="n">person</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">person</span><span class="o">.</span><span class="n">data</span>
+<span class="n">FROM</span> <span class="n">person</span>
+<span class="n">WHERE</span> <span class="n">person</span><span class="o">.</span><span class="n">data</span> <span class="o">-&gt;</span> <span class="o">%</span><span class="p">(</span><span class="n">data_1</span><span class="p">)</span><span class="n">s</span> <span class="o">-&gt;</span> <span class="o">%</span><span class="p">(</span><span class="n">param_1</span><span class="p">)</span><span class="n">s</span> <span class="o">=</span> <span class="o">%</span><span class="p">(</span><span class="n">param_2</span><span class="p">)</span><span class="n">s</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="default-values">
+<h2>Default Values<a class="headerlink" href="#default-values" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="indexable_ko.html#sqlalchemy.ext.indexable.index_property" title="sqlalchemy.ext.indexable.index_property"><code class="xref py py-class docutils literal"><span class="pre">index_property</span></code></a> includes special behaviors for when the indexed
+data structure does not exist, and a set operation is called:</p>
+<ul class="simple">
+<li>For an <a class="reference internal" href="indexable_ko.html#sqlalchemy.ext.indexable.index_property" title="sqlalchemy.ext.indexable.index_property"><code class="xref py py-class docutils literal"><span class="pre">index_property</span></code></a> that is given an integer index value,
+the default data structure will be a Python list of <code class="docutils literal"><span class="pre">None</span></code> values,
+at least as long as the index value; the value is then set at its
+place in the list.  This means for an index value of zero, the list
+will be initialized to <code class="docutils literal"><span class="pre">[None]</span></code> before setting the given value,
+and for an index value of five, the list will be initialized to
+<code class="docutils literal"><span class="pre">[None,</span> <span class="pre">None,</span> <span class="pre">None,</span> <span class="pre">None,</span> <span class="pre">None]</span></code> before setting the fifth element
+to the given value.   Note that an existing list is <strong>not</strong> extended
+in place to receive a value.</li>
+<li>for an <a class="reference internal" href="indexable_ko.html#sqlalchemy.ext.indexable.index_property" title="sqlalchemy.ext.indexable.index_property"><code class="xref py py-class docutils literal"><span class="pre">index_property</span></code></a> that is given any other kind of index
+value (e.g. strings usually), a Python dictionary is used as the
+default data structure.</li>
+<li>The default data structure can be set to any Python callable using the
+<a class="reference internal" href="indexable_ko.html#sqlalchemy.ext.indexable.index_property.params.datatype" title="sqlalchemy.ext.indexable.index_property"><code class="xref py py-paramref docutils literal"><span class="pre">index_property.datatype</span></code></a> parameter, overriding the previous
+rules.</li>
+</ul>
+</div>
+<div class="section" id="subclassing">
+<h2>Subclassing<a class="headerlink" href="#subclassing" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="indexable_ko.html#sqlalchemy.ext.indexable.index_property" title="sqlalchemy.ext.indexable.index_property"><code class="xref py py-class docutils literal"><span class="pre">index_property</span></code></a> can be subclassed, in particular for the common
+use case of providing coercion of values or SQL expressions as they are
+accessed.  Below is a common recipe for use with a PostgreSQL JSON type,
+where we want to also include automatic casting plus <code class="docutils literal"><span class="pre">astext()</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">pg_json_property</span><span class="p">(</span><span class="n">index_property</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">cast_type</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">pg_json_property</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">attr_name</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cast_type</span> <span class="o">=</span> <span class="n">cast_type</span>
+
+    <span class="k">def</span> <span class="nf">expr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="n">expr</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">pg_json_property</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">expr</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">expr</span><span class="o">.</span><span class="n">astext</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cast_type</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The above subclass can be used with the PostgreSQL-specific
+version of <a class="reference internal" href="../../dialects/postgresql.html#sqlalchemy.dialects.postgresql.JSON" title="sqlalchemy.dialects.postgresql.JSON"><code class="xref py py-class docutils literal"><span class="pre">postgresql.JSON</span></code></a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">declarative_base</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.dialects.postgresql</span> <span class="k">import</span> <span class="n">JSON</span>
+
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;person&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">JSON</span><span class="p">)</span>
+
+    <span class="n">age</span> <span class="o">=</span> <span class="n">pg_json_property</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">age</span></code> attribute at the instance level works as before; however
+when rendering SQL, PostgreSQL’s <code class="docutils literal"><span class="pre">-&gt;&gt;</span></code> operator will be used
+for indexed access, instead of the usual index opearator of <code class="docutils literal"><span class="pre">-&gt;</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Person</span><span class="o">.</span><span class="n">age</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The above query will render:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SELECT</span> <span class="n">person</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">person</span><span class="o">.</span><span class="n">data</span>
+<span class="n">FROM</span> <span class="n">person</span>
+<span class="n">WHERE</span> <span class="n">CAST</span><span class="p">(</span><span class="n">person</span><span class="o">.</span><span class="n">data</span> <span class="o">-&gt;&gt;</span> <span class="o">%</span><span class="p">(</span><span class="n">data_1</span><span class="p">)</span><span class="n">s</span> <span class="n">AS</span> <span class="n">INTEGER</span><span class="p">)</span> <span class="o">&lt;</span> <span class="o">%</span><span class="p">(</span><span class="n">param_1</span><span class="p">)</span><span class="n">s</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="sqlalchemy.ext.indexable.index_property">
+<em class="property">class </em><code class="descclassname">sqlalchemy.ext.indexable.</code><code class="descname">index_property</code><span class="sig-paren">(</span><em>attr_name</em>, <em>index</em>, <em>default=&lt;object object&gt;</em>, <em>datatype=None</em>, <em>mutable=True</em>, <em>onebased=True</em><span class="sig-paren">)</span><a class="headerlink" href="#sqlalchemy.ext.indexable.index_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property generator. The generated property describes an object
+attribute that corresponds to an <a class="reference internal" href="../../core/type_api_ko.html#sqlalchemy.types.Indexable" title="sqlalchemy.types.Indexable"><code class="xref py py-class docutils literal"><span class="pre">Indexable</span></code></a>
+column.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 1.1.</span></p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="indexable_ko.html#module-sqlalchemy.ext.indexable" title="sqlalchemy.ext.indexable"><code class="xref py py-mod docutils literal"><span class="pre">sqlalchemy.ext.indexable</span></code></a></p>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="instrumentation.html" class="btn btn-neutral float-right" title="Alternate Class Instrumentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hybrid.html" class="btn btn-neutral" title="Hybrid Attributes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.2.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

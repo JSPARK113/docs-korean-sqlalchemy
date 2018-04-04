@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SQLAlchemy 문서 &mdash; SQLAlchemy 1.2.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/changelog.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/sphinx_paramlinks.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+        <link rel="copyright" title="Copyright" href="copyright.html"/>
+    <link rel="top" title="SQLAlchemy 1.2.4 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="contents_ko.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="intro_ko.html">개요</a></li>
+<li class="toctree-l1"><a class="reference internal" href="orm/index_ko.html">SQLAlchemy ORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core/index_ko.html">SQLAlchemy core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dialects/index_ko.html">다이얼렉트(Dialects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq/index_ko.html">자주 물어보는 질문</a></li>
+<li class="toctree-l1"><a class="reference internal" href="errors_ko.html">오류 메세지</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog/index_ko.html">변경사항과 마이그레이션</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents_ko.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="contents_ko.html">Docs</a> &raquo;</li>
+        
+      <li>SQLAlchemy 문서</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy/blob/docs-korean/doc/build/index_ko.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sqlalchemy">
+<span id="index-toplevel"></span><h1>SQLAlchemy 문서<a class="headerlink" href="#sqlalchemy" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>시작하기<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>SQLAlchemy에 대한 간단한 설명.</p>
+<p><a class="reference internal" href="intro_ko.html"><span class="doc">개요</span></a> |
+<a class="reference internal" href="intro_ko.html#installation"><span class="std std-ref">설치 가이드</span></a> |
+<a class="reference internal" href="faq/index_ko.html"><span class="doc">자주 물어보는 질문</span></a> |
+<a class="reference internal" href="changelog/migration_12_ko.html"><span class="doc">1.1에서 마이그레이션 하기</span></a> |
+<a class="reference internal" href="glossary_ko.html"><span class="doc">용어집</span></a> |
+<a class="reference internal" href="errors_ko.html"><span class="doc">오류 메세지</span></a> |
+<a class="reference internal" href="changelog/index_ko.html"><span class="doc">변경사항 목록</span></a></p>
+</div>
+<div class="section" id="sqlalchemy-orm">
+<h2>SQLAlchemy ORM<a class="headerlink" href="#sqlalchemy-orm" title="Permalink to this headline">¶</a></h2>
+<p>여기에서는 ORM(Object Relational Mapper)을 소개한다.
+자동으로 생성되는 고수준 SQL과 파이썬 객체의 자동 기록 기능을 사용하고 싶으면
+이 섹션의 튜토리얼부터 진행한다.</p>
+<ul class="simple">
+<li><strong>가장 처음에 읽어야하는 문서:</strong>
+<a class="reference internal" href="orm/tutorial_ko.html"><span class="doc">ORM 튜토리얼</span></a></li>
+<li><strong>ORM 설정:</strong>
+<a class="reference internal" href="orm/mapper_config_ko.html"><span class="doc">Mapper Configuration</span></a> |
+<a class="reference internal" href="orm/relationships_ko.html"><span class="doc">Relationship Configuration</span></a></li>
+<li><strong>설정용 확장 프로그램:</strong>
+<a class="reference internal" href="orm/extensions/declarative/index_ko.html"><span class="doc">선언형(declarative)</span></a> |
+<a class="reference internal" href="orm/extensions/associationproxy_ko.html"><span class="doc">연관 프록시(Association Proxy)</span></a> |
+<a class="reference internal" href="orm/extensions/hybrid_ko.html"><span class="doc">하이브리드 속성(Hybrid Attributes)</span></a> |
+<a class="reference internal" href="orm/extensions/automap_ko.html"><span class="doc">오토맵(Automap)</span></a> |
+<a class="reference internal" href="orm/extensions/mutable_ko.html"><span class="doc">뮤터블 스칼라(Mutable Scalars)</span></a> |
+<a class="reference internal" href="orm/extensions/indexable_ko.html"><span class="doc">인덱서블(Indexable)</span></a></li>
+<li><strong>ORM 사용법:</strong>
+<a class="reference internal" href="orm/session_ko.html"><span class="doc">세션의 사용과 가이드라인</span></a> |
+<a class="reference internal" href="orm/loading_objects_ko.html"><span class="doc">객체 로딩</span></a> |
+<a class="reference internal" href="orm/extensions/baked_ko.html"><span class="doc">쿼리 캐쉬</span></a></li>
+<li><strong>ORM 확장하기:</strong>
+<a class="reference internal" href="orm/extending_ko.html"><span class="doc">ORM 이벤트와 내부 구조</span></a></li>
+<li><strong>기타:</strong>
+<a class="reference internal" href="orm/examples_ko.html"><span class="doc">예제 소개</span></a></li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>SQLAlchemy 코어<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>여기에서는 SQLAlchemy의 SQL 렌더링 엔진, DBAPI 통합, 트랜스잭션 통합, 스키마 서술 서비스에
+대해 설명한다.
+ORM의 도메인 중심의 사용 방식과 달리, SQL 표현식 언어는 스키마 중심의 패러다임을 제공한다.</p>
+<ul class="simple">
+<li><strong>가장 처음에 읽어야하는 문서:</strong>
+<a class="reference internal" href="core/tutorial_ko.html"><span class="doc">SQL 표현식 언어 튜토리얼</span></a></li>
+<li><strong>SQL 내장 기능:</strong>
+<a class="reference internal" href="core/expression_api_ko.html"><span class="doc">SQL 표현식 API</span></a></li>
+<li><strong>엔진, 컨넥션, 풀링:</strong>
+<a class="reference internal" href="core/engines_ko.html"><span class="doc">엔진 설정</span></a> |
+<a class="reference internal" href="core/connections_ko.html"><span class="doc">컨넥션, 트랜잭션</span></a> |
+<a class="reference internal" href="core/pooling_ko.html"><span class="doc">컨넥션 풀링</span></a></li>
+<li><strong>스키마 정의:</strong>
+<a class="reference internal" href="core/schema.html"><span class="doc">개요</span></a> |
+<span class="xref std std-ref">테이블과 컬럼</span> |
+<span class="xref std std-ref">데이터베이스 인트로스펙션(Reflection)</span> |
+<span class="xref std std-ref">인서트/업데이트 디폴트</span> |
+<span class="xref std std-ref">제약조건과 인덱스</span> |
+<span class="xref std std-ref">데이터 정의 언어(DDL: Data Definition Language) 사용법</span></li>
+<li><strong>Datatypes:</strong>
+<span class="xref std std-ref">개요</span> |
+<span class="xref std std-ref">커스텀 자료형 정의</span> |
+<span class="xref std std-ref">API</span></li>
+<li><strong>코어 기초:</strong>
+<a class="reference internal" href="core/api_basics_ko.html"><span class="doc">개요</span></a> |
+<a class="reference internal" href="core/inspection_ko.html"><span class="doc">런타임 인트로스펙션(Inspection) API</span></a> |
+<a class="reference internal" href="core/event_ko.html"><span class="doc">이벤트 시스템</span></a> |
+<a class="reference internal" href="core/events_ko.html"><span class="doc">코어 이벤트 인터페이스</span></a> |
+<a class="reference internal" href="core/compiler_ko.html"><span class="doc">커스텀 SQL 생성</span></a> |</li>
+</ul>
+</div>
+<div class="section" id="dialect">
+<h2>Dialect 문서<a class="headerlink" href="#dialect" title="Permalink to this headline">¶</a></h2>
+<p><strong>dialect</strong>는 SQLAlchemy에서 다양한 타입의 DBAPI 및 데이터베이스를 사용하기 위한 시스템이다.
+이 섹션에서는 개별적인 dialect 및 이와 관련된 사용 패턴을 다루고 있다.</p>
+<p><a class="reference internal" href="dialects/index_ko.html"><span class="doc">Index of all Dialects</span></a></p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.2.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

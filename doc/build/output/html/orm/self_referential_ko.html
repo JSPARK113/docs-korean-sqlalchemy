@@ -1,0 +1,476 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Adjacency List Relationships &mdash; SQLAlchemy 1.2.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="SQLAlchemy 1.2.4 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents_ko.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro_ko.html">개요</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index_ko.html">SQLAlchemy ORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index_ko.html">SQLAlchemy core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index_ko.html">다이얼렉트(Dialects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index_ko.html">자주 물어보는 질문</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors_ko.html">오류 메세지</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index_ko.html">변경사항과 마이그레이션</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents_ko.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents_ko.html">Docs</a> &raquo;</li>
+        
+      <li>Adjacency List Relationships</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy/blob/docs-korean/doc/build/orm/self_referential_ko.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="adjacency-list-relationships">
+<span id="self-referential"></span><h1>Adjacency List Relationships<a class="headerlink" href="#adjacency-list-relationships" title="Permalink to this headline">¶</a></h1>
+<p>The <strong>adjacency list</strong> pattern is a common relational pattern whereby a table
+contains a foreign key reference to itself. This is the most common
+way to represent hierarchical data in flat tables.  Other methods
+include <strong>nested sets</strong>, sometimes called “modified preorder”,
+as well as <strong>materialized path</strong>.  Despite the appeal that modified preorder
+has when evaluated for its fluency within SQL queries, the adjacency list model is
+probably the most appropriate pattern for the large majority of hierarchical
+storage needs, for reasons of concurrency, reduced complexity, and that
+modified preorder has little advantage over an application which can fully
+load subtrees into the application space.</p>
+<p>In this example, we’ll work with a single mapped
+class called <code class="docutils literal"><span class="pre">Node</span></code>, representing a tree structure:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Node</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;node&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">parent_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;node.id&#39;</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">children</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Node&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With this structure, a graph such as the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">root</span> <span class="o">--+---&gt;</span> <span class="n">child1</span>
+       <span class="o">+---&gt;</span> <span class="n">child2</span> <span class="o">--+--&gt;</span> <span class="n">subchild1</span>
+       <span class="o">|</span>              <span class="o">+--&gt;</span> <span class="n">subchild2</span>
+       <span class="o">+---&gt;</span> <span class="n">child3</span>
+</pre></div>
+</div>
+<p>Would be represented with data such as:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">id</span>       <span class="n">parent_id</span>     <span class="n">data</span>
+<span class="o">---</span>      <span class="o">-------</span>       <span class="o">----</span>
+<span class="mi">1</span>        <span class="n">NULL</span>          <span class="n">root</span>
+<span class="mi">2</span>        <span class="mi">1</span>             <span class="n">child1</span>
+<span class="mi">3</span>        <span class="mi">1</span>             <span class="n">child2</span>
+<span class="mi">4</span>        <span class="mi">3</span>             <span class="n">subchild1</span>
+<span class="mi">5</span>        <span class="mi">3</span>             <span class="n">subchild2</span>
+<span class="mi">6</span>        <span class="mi">1</span>             <span class="n">child3</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="relationship_api_ko.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal"><span class="pre">relationship()</span></code></a> configuration here works in the
+same way as a “normal” one-to-many relationship, with the
+exception that the “direction”, i.e. whether the relationship
+is one-to-many or many-to-one, is assumed by default to
+be one-to-many.   To establish the relationship as many-to-one,
+an extra directive is added known as <a class="reference internal" href="relationship_api_ko.html#sqlalchemy.orm.relationship.params.remote_side" title="sqlalchemy.orm.relationship"><code class="xref py py-paramref docutils literal"><span class="pre">remote_side</span></code></a>, which
+is a <a class="reference internal" href="../core/metadata_ko.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal"><span class="pre">Column</span></code></a> or collection of <a class="reference internal" href="../core/metadata_ko.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal"><span class="pre">Column</span></code></a> objects
+that indicate those which should be considered to be “remote”:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Node</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;node&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">parent_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;node.id&#39;</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Node&quot;</span><span class="p">,</span> <span class="n">remote_side</span><span class="o">=</span><span class="p">[</span><span class="nb">id</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Where above, the <code class="docutils literal"><span class="pre">id</span></code> column is applied as the <a class="reference internal" href="relationship_api_ko.html#sqlalchemy.orm.relationship.params.remote_side" title="sqlalchemy.orm.relationship"><code class="xref py py-paramref docutils literal"><span class="pre">remote_side</span></code></a>
+of the <code class="docutils literal"><span class="pre">parent</span></code> <a class="reference internal" href="relationship_api_ko.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal"><span class="pre">relationship()</span></code></a>, thus establishing
+<code class="docutils literal"><span class="pre">parent_id</span></code> as the “local” side, and the relationship
+then behaves as a many-to-one.</p>
+<p>As always, both directions can be combined into a bidirectional
+relationship using the <a class="reference internal" href="relationship_api_ko.html#sqlalchemy.orm.backref" title="sqlalchemy.orm.backref"><code class="xref py py-func docutils literal"><span class="pre">backref()</span></code></a> function:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Node</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;node&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">parent_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;node.id&#39;</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">children</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Node&quot;</span><span class="p">,</span>
+                <span class="n">backref</span><span class="o">=</span><span class="n">backref</span><span class="p">(</span><span class="s1">&#39;parent&#39;</span><span class="p">,</span> <span class="n">remote_side</span><span class="o">=</span><span class="p">[</span><span class="nb">id</span><span class="p">])</span>
+            <span class="p">)</span>
+</pre></div>
+</div>
+<p>There are several examples included with SQLAlchemy illustrating
+self-referential strategies; these include <a class="reference internal" href="examples_ko.html#examples-adjacencylist"><span class="std std-ref">Adjacency List</span></a> and
+<a class="reference internal" href="examples_ko.html#examples-xmlpersistence"><span class="std std-ref">XML Persistence</span></a>.</p>
+<div class="section" id="composite-adjacency-lists">
+<h2>Composite Adjacency Lists<a class="headerlink" href="#composite-adjacency-lists" title="Permalink to this headline">¶</a></h2>
+<p>A sub-category of the adjacency list relationship is the rare
+case where a particular column is present on both the “local” and
+“remote” side of the join condition.  An example is the <code class="docutils literal"><span class="pre">Folder</span></code>
+class below; using a composite primary key, the <code class="docutils literal"><span class="pre">account_id</span></code>
+column refers to itself, to indicate sub folders which are within
+the same account as that of the parent; while <code class="docutils literal"><span class="pre">folder_id</span></code> refers
+to a specific folder within that account:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Folder</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;folder&#39;</span>
+    <span class="n">__table_args__</span> <span class="o">=</span> <span class="p">(</span>
+      <span class="n">ForeignKeyConstraint</span><span class="p">(</span>
+          <span class="p">[</span><span class="s1">&#39;account_id&#39;</span><span class="p">,</span> <span class="s1">&#39;parent_id&#39;</span><span class="p">],</span>
+          <span class="p">[</span><span class="s1">&#39;folder.account_id&#39;</span><span class="p">,</span> <span class="s1">&#39;folder.folder_id&#39;</span><span class="p">]),</span>
+    <span class="p">)</span>
+
+    <span class="n">account_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">folder_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">parent_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+
+    <span class="n">parent_folder</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Folder&quot;</span><span class="p">,</span>
+                        <span class="n">backref</span><span class="o">=</span><span class="s2">&quot;child_folders&quot;</span><span class="p">,</span>
+                        <span class="n">remote_side</span><span class="o">=</span><span class="p">[</span><span class="n">account_id</span><span class="p">,</span> <span class="n">folder_id</span><span class="p">]</span>
+                  <span class="p">)</span>
+</pre></div>
+</div>
+<p>Above, we pass <code class="docutils literal"><span class="pre">account_id</span></code> into the <a class="reference internal" href="relationship_api_ko.html#sqlalchemy.orm.relationship.params.remote_side" title="sqlalchemy.orm.relationship"><code class="xref py py-paramref docutils literal"><span class="pre">remote_side</span></code></a> list.
+<a class="reference internal" href="relationship_api_ko.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal"><span class="pre">relationship()</span></code></a> recognizes that the <code class="docutils literal"><span class="pre">account_id</span></code> column here
+is on both sides, and aligns the “remote” column along with the
+<code class="docutils literal"><span class="pre">folder_id</span></code> column, which it recognizes as uniquely present on
+the “remote” side.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 0.8: </span>Support for self-referential composite keys in <a class="reference internal" href="relationship_api_ko.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal"><span class="pre">relationship()</span></code></a>
+where a column points to itself.</p>
+</div>
+</div>
+<div class="section" id="self-referential-query-strategies">
+<h2>Self-Referential Query Strategies<a class="headerlink" href="#self-referential-query-strategies" title="Permalink to this headline">¶</a></h2>
+<p>Querying of self-referential structures works like any other query:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># get all nodes named &#39;child2&#39;</span>
+<span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Node</span><span class="o">.</span><span class="n">data</span><span class="o">==</span><span class="s1">&#39;child2&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>However extra care is needed when attempting to join along
+the foreign key from one level of the tree to the next.  In SQL,
+a join from a table to itself requires that at least one side of the
+expression be “aliased” so that it can be unambiguously referred to.</p>
+<p>Recall from <a class="reference internal" href="tutorial_ko.html#ormtutorial-aliases"><span class="std std-ref">Using Aliases</span></a> in the ORM tutorial that the
+<a class="reference internal" href="query_ko.html#sqlalchemy.orm.aliased" title="sqlalchemy.orm.aliased"><code class="xref py py-func docutils literal"><span class="pre">orm.aliased()</span></code></a> construct is normally used to provide an “alias” of
+an ORM entity.  Joining from <code class="docutils literal"><span class="pre">Node</span></code> to itself using this technique
+looks like:</p>
+<div class="highlight-python+sql"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">aliased</span>
+
+<span class="n">nodealias</span> <span class="o">=</span> <span class="n">aliased</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span>
+<span class=" -Sql -Sql-Link">{sql}</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Node</span><span class="o">.</span><span class="n">data</span><span class="o">==</span><span class="s1">&#39;subchild1&#39;</span><span class="p">)</span><span class="o">.</span>\
+                <span class="n">join</span><span class="p">(</span><span class="n">nodealias</span><span class="p">,</span> <span class="n">Node</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span><span class="o">.</span>\
+                <span class="nb">filter</span><span class="p">(</span><span class="n">nodealias</span><span class="o">.</span><span class="n">data</span><span class="o">==</span><span class="s2">&quot;child2&quot;</span><span class="p">)</span><span class="o">.</span>\
+                <span class="nb">all</span><span class="p">()</span>
+<span class=" -Sql -Sql-Popup">SELECT node.id AS node_id,</span>
+<span class=" -Sql -Sql-Popup">        node.parent_id AS node_parent_id,</span>
+<span class=" -Sql -Sql-Popup">        node.data AS node_data</span>
+<span class=" -Sql -Sql-Popup">FROM node JOIN node AS node_1</span>
+<span class=" -Sql -Sql-Popup">    ON node.parent_id = node_1.id</span>
+<span class=" -Sql -Sql-Popup">WHERE node.data = ?</span>
+<span class=" -Sql -Sql-Popup">    AND node_1.data = ?</span>
+<span class=" -Sql -Sql-Popup">[&#39;subchild1&#39;, &#39;child2&#39;]</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="query_ko.html#sqlalchemy.orm.query.Query.join" title="sqlalchemy.orm.query.Query.join"><code class="xref py py-meth docutils literal"><span class="pre">Query.join()</span></code></a> also includes a feature known as
+<a class="reference internal" href="query_ko.html#sqlalchemy.orm.query.Query.join.params.aliased" title="sqlalchemy.orm.query.Query.join"><code class="xref py py-paramref docutils literal"><span class="pre">Query.join.aliased</span></code></a> that can shorten the verbosity self-
+referential joins, at the expense of query flexibility.  This feature
+performs a similar “aliasing” step to that above, without the need for
+an explicit entity.   Calls to <a class="reference internal" href="query_ko.html#sqlalchemy.orm.query.Query.filter" title="sqlalchemy.orm.query.Query.filter"><code class="xref py py-meth docutils literal"><span class="pre">Query.filter()</span></code></a> and similar
+subsequent to the aliased join will <strong>adapt</strong> the <code class="docutils literal"><span class="pre">Node</span></code> entity to
+be that of the alias:</p>
+<div class="highlight-python+sql"><div class="highlight"><pre><span></span><span class=" -Sql -Sql-Link">{sql}</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Node</span><span class="o">.</span><span class="n">data</span><span class="o">==</span><span class="s1">&#39;subchild1&#39;</span><span class="p">)</span><span class="o">.</span>\
+        <span class="n">join</span><span class="p">(</span><span class="n">Node</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">aliased</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span>\
+        <span class="nb">filter</span><span class="p">(</span><span class="n">Node</span><span class="o">.</span><span class="n">data</span><span class="o">==</span><span class="s1">&#39;child2&#39;</span><span class="p">)</span><span class="o">.</span>\
+        <span class="nb">all</span><span class="p">()</span>
+<span class=" -Sql -Sql-Popup">SELECT node.id AS node_id,</span>
+<span class=" -Sql -Sql-Popup">        node.parent_id AS node_parent_id,</span>
+<span class=" -Sql -Sql-Popup">        node.data AS node_data</span>
+<span class=" -Sql -Sql-Popup">FROM node</span>
+<span class=" -Sql -Sql-Popup">    JOIN node AS node_1 ON node_1.id = node.parent_id</span>
+<span class=" -Sql -Sql-Popup">WHERE node.data = ? AND node_1.data = ?</span>
+<span class=" -Sql -Sql-Popup">[&#39;subchild1&#39;, &#39;child2&#39;]</span>
+</pre></div>
+</div>
+<p>To add criterion to multiple points along a longer join, add
+<a class="reference internal" href="query_ko.html#sqlalchemy.orm.query.Query.join.params.from_joinpoint" title="sqlalchemy.orm.query.Query.join"><code class="xref py py-paramref docutils literal"><span class="pre">Query.join.from_joinpoint</span></code></a> to the additional
+<a class="reference internal" href="query_ko.html#sqlalchemy.orm.query.Query.join" title="sqlalchemy.orm.query.Query.join"><code class="xref py py-meth docutils literal"><span class="pre">join()</span></code></a> calls:</p>
+<div class="highlight-python+sql"><div class="highlight"><pre><span></span><span class="c1"># get all nodes named &#39;subchild1&#39; with a</span>
+<span class="c1"># parent named &#39;child2&#39; and a grandparent &#39;root&#39;</span>
+<span class=" -Sql -Sql-Link">{sql}</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span><span class="o">.</span>\
+        <span class="nb">filter</span><span class="p">(</span><span class="n">Node</span><span class="o">.</span><span class="n">data</span><span class="o">==</span><span class="s1">&#39;subchild1&#39;</span><span class="p">)</span><span class="o">.</span>\
+        <span class="n">join</span><span class="p">(</span><span class="n">Node</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">aliased</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span>\
+        <span class="nb">filter</span><span class="p">(</span><span class="n">Node</span><span class="o">.</span><span class="n">data</span><span class="o">==</span><span class="s1">&#39;child2&#39;</span><span class="p">)</span><span class="o">.</span>\
+        <span class="n">join</span><span class="p">(</span><span class="n">Node</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">aliased</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">from_joinpoint</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span>\
+        <span class="nb">filter</span><span class="p">(</span><span class="n">Node</span><span class="o">.</span><span class="n">data</span><span class="o">==</span><span class="s1">&#39;root&#39;</span><span class="p">)</span><span class="o">.</span>\
+        <span class="nb">all</span><span class="p">()</span>
+<span class=" -Sql -Sql-Popup">SELECT node.id AS node_id,</span>
+<span class=" -Sql -Sql-Popup">        node.parent_id AS node_parent_id,</span>
+<span class=" -Sql -Sql-Popup">        node.data AS node_data</span>
+<span class=" -Sql -Sql-Popup">FROM node</span>
+<span class=" -Sql -Sql-Popup">    JOIN node AS node_1 ON node_1.id = node.parent_id</span>
+<span class=" -Sql -Sql-Popup">    JOIN node AS node_2 ON node_2.id = node_1.parent_id</span>
+<span class=" -Sql -Sql-Popup">WHERE node.data = ?</span>
+<span class=" -Sql -Sql-Popup">    AND node_1.data = ?</span>
+<span class=" -Sql -Sql-Popup">    AND node_2.data = ?</span>
+<span class=" -Sql -Sql-Popup">[&#39;subchild1&#39;, &#39;child2&#39;, &#39;root&#39;]</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="query_ko.html#sqlalchemy.orm.query.Query.reset_joinpoint" title="sqlalchemy.orm.query.Query.reset_joinpoint"><code class="xref py py-meth docutils literal"><span class="pre">Query.reset_joinpoint()</span></code></a> will also remove the “aliasing” from filtering
+calls:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span><span class="o">.</span>\
+        <span class="n">join</span><span class="p">(</span><span class="n">Node</span><span class="o">.</span><span class="n">children</span><span class="p">,</span> <span class="n">aliased</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span>\
+        <span class="nb">filter</span><span class="p">(</span><span class="n">Node</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s1">&#39;foo&#39;</span><span class="p">)</span><span class="o">.</span>\
+        <span class="n">reset_joinpoint</span><span class="p">()</span><span class="o">.</span>\
+        <span class="nb">filter</span><span class="p">(</span><span class="n">Node</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For an example of using <a class="reference internal" href="query_ko.html#sqlalchemy.orm.query.Query.join.params.aliased" title="sqlalchemy.orm.query.Query.join"><code class="xref py py-paramref docutils literal"><span class="pre">Query.join.aliased</span></code></a> to
+arbitrarily join along a chain of self-referential nodes, see
+<a class="reference internal" href="examples_ko.html#examples-xmlpersistence"><span class="std std-ref">XML Persistence</span></a>.</p>
+</div>
+<div class="section" id="configuring-self-referential-eager-loading">
+<span id="self-referential-eager-loading"></span><h2>Configuring Self-Referential Eager Loading<a class="headerlink" href="#configuring-self-referential-eager-loading" title="Permalink to this headline">¶</a></h2>
+<p>Eager loading of relationships occurs using joins or outerjoins from parent to
+child table during a normal query operation, such that the parent and its
+immediate child collection or reference can be populated from a single SQL
+statement, or a second statement for all immediate child collections.
+SQLAlchemy’s joined and subquery eager loading use aliased tables in all cases
+when joining to related items, so are compatible with self-referential
+joining. However, to use eager loading with a self-referential relationship,
+SQLAlchemy needs to be told how many levels deep it should join and/or query;
+otherwise the eager load will not take place at all. This depth setting is
+configured via <code class="xref py py-paramref docutils literal"><span class="pre">join_depth</span></code>:</p>
+<div class="highlight-python+sql"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Node</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;node&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">parent_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;node.id&#39;</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">children</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Node&quot;</span><span class="p">,</span>
+                    <span class="n">lazy</span><span class="o">=</span><span class="s2">&quot;joined&quot;</span><span class="p">,</span>
+                    <span class="n">join_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class=" -Sql -Sql-Link">{sql}</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Node</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class=" -Sql -Sql-Popup">SELECT node_1.id AS node_1_id,</span>
+<span class=" -Sql -Sql-Popup">        node_1.parent_id AS node_1_parent_id,</span>
+<span class=" -Sql -Sql-Popup">        node_1.data AS node_1_data,</span>
+<span class=" -Sql -Sql-Popup">        node_2.id AS node_2_id,</span>
+<span class=" -Sql -Sql-Popup">        node_2.parent_id AS node_2_parent_id,</span>
+<span class=" -Sql -Sql-Popup">        node_2.data AS node_2_data,</span>
+<span class=" -Sql -Sql-Popup">        node.id AS node_id,</span>
+<span class=" -Sql -Sql-Popup">        node.parent_id AS node_parent_id,</span>
+<span class=" -Sql -Sql-Popup">        node.data AS node_data</span>
+<span class=" -Sql -Sql-Popup">FROM node</span>
+<span class=" -Sql -Sql-Popup">    LEFT OUTER JOIN node AS node_2</span>
+<span class=" -Sql -Sql-Popup">        ON node.id = node_2.parent_id</span>
+<span class=" -Sql -Sql-Popup">    LEFT OUTER JOIN node AS node_1</span>
+<span class=" -Sql -Sql-Popup">        ON node_2.id = node_1.parent_id</span>
+<span class=" -Sql -Sql-Popup">[]</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>세션 사용법 &mdash; SQLAlchemy 1.2.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="SQLAlchemy 1.2.4 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents_ko.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro_ko.html">개요</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index_ko.html">SQLAlchemy ORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index_ko.html">SQLAlchemy core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index_ko.html">다이얼렉트(Dialects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index_ko.html">자주 물어보는 질문</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors_ko.html">오류 메세지</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index_ko.html">변경사항과 마이그레이션</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents_ko.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents_ko.html">Docs</a> &raquo;</li>
+        
+      <li>세션 사용법</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy/blob/docs-korean/doc/build/orm/session_ko.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-sqlalchemy.orm.session">
+<span id="id1"></span><span id="session-toplevel"></span><h1>세션 사용법<a class="headerlink" href="#module-sqlalchemy.orm.session" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference internal" href="mapping_api_ko.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal"><span class="pre">orm.mapper()</span></code></a> 함수와 <a class="reference internal" href="extensions/declarative/api_ko.html#module-sqlalchemy.ext.declarative" title="sqlalchemy.ext.declarative"><code class="xref py py-mod docutils literal"><span class="pre">declarative</span></code></a> 익스텐션은
+ORM을 설정하기 위한 가장 기본 도구이지만
+일단 설정이 끝나면 데이터 조작을 위한 가장 기본 인터페이스는 <a class="reference internal" href="session_api_ko.html#sqlalchemy.orm.session.Session" title="sqlalchemy.orm.session.Session"><code class="xref py py-class docutils literal"><span class="pre">Session</span></code></a>이 된다.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="session_basics.html">Session Basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="session_basics.html#what-does-the-session-do">What does the Session do ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_basics.html#getting-a-session">Getting a Session</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_basics.html#session-frequently-asked-questions">Session Frequently Asked Questions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_basics.html#basics-of-using-a-session">Basics of Using a Session</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="session_state_management.html">State Management</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="session_state_management.html#quickie-intro-to-object-states">Quickie Intro to Object States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_state_management.html#session-attributes">Session Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_state_management.html#session-referencing-behavior">Session Referencing Behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_state_management.html#merging">Merging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_state_management.html#expunging">Expunging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_state_management.html#refreshing-expiring">Refreshing / Expiring</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cascades.html">Cascades</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cascades.html#save-update">save-update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cascades.html#delete">delete</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cascades.html#delete-orphan">delete-orphan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cascades.html#merge">merge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cascades.html#refresh-expire">refresh-expire</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cascades.html#expunge">expunge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cascades.html#controlling-cascade-on-backrefs">Controlling Cascade on Backrefs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="session_transaction.html">Transactions and Connection Management</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="session_transaction.html#managing-transactions">Managing Transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_transaction.html#joining-a-session-into-an-external-transaction-such-as-for-test-suites">Joining a Session into an External Transaction (such as for test suites)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="persistence_techniques.html">Additional Persistence Techniques</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="persistence_techniques.html#embedding-sql-insert-update-expressions-into-a-flush">Embedding SQL Insert/Update Expressions into a Flush</a></li>
+<li class="toctree-l2"><a class="reference internal" href="persistence_techniques.html#using-sql-expressions-with-sessions">Using SQL Expressions with Sessions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="persistence_techniques.html#forcing-null-on-a-column-with-a-default">Forcing NULL on a column with a default</a></li>
+<li class="toctree-l2"><a class="reference internal" href="persistence_techniques.html#partitioning-strategies">Partitioning Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="persistence_techniques.html#bulk-operations">Bulk Operations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contextual.html">Contextual/Thread-local Sessions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contextual.html#implicit-method-access">Implicit Method Access</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contextual.html#thread-local-scope">Thread-Local Scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contextual.html#using-thread-local-scope-with-web-applications">Using Thread-Local Scope with Web Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contextual.html#using-custom-created-scopes">Using Custom Created Scopes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contextual.html#contextual-session-api">Contextual Session API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="session_events.html">Tracking Object and Session Changes with Events</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="session_events.html#persistence-events">Persistence Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_events.html#object-lifecycle-events">Object Lifecycle Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_events.html#transaction-events">Transaction Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_events.html#attribute-change-events">Attribute Change Events</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="session_api.html">Session API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="session_api.html#session-and-sessionmaker">Session and sessionmaker()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_api.html#session-utilities">Session Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="session_api.html#attribute-and-state-management-utilities">Attribute and State Management Utilities</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

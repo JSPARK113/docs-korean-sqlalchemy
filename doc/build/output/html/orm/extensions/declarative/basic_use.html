@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Basic Use &mdash; SQLAlchemy 1.2.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/changelog.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../../_static/sphinx_paramlinks.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+        <link rel="copyright" title="Copyright" href="../../../copyright.html"/>
+    <link rel="top" title="SQLAlchemy 1.2.4 documentation" href="../../../index.html"/>
+        <link rel="up" title="Declarative" href="index.html"/>
+        <link rel="next" title="Configuring Relationships" href="relationships.html"/>
+        <link rel="prev" title="Declarative" href="index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../contents_ko.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro_ko.html">개요</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index_ko.html">SQLAlchemy ORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core/index_ko.html">SQLAlchemy core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dialects/index_ko.html">다이얼렉트(Dialects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq/index_ko.html">자주 물어보는 질문</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../errors_ko.html">오류 메세지</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog/index_ko.html">변경사항과 마이그레이션</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../contents_ko.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../contents_ko.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index_ko.html">SQLAlchemy ORM</a> &raquo;</li>
+        
+          <li><a href="../index.html">ORM Extensions</a> &raquo;</li>
+        
+          <li><a href="index.html">Declarative</a> &raquo;</li>
+        
+      <li>Basic Use</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy/blob/docs-korean/doc/build/orm/extensions/declarative/basic_use.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="basic-use">
+<h1>Basic Use<a class="headerlink" href="#basic-use" title="Permalink to this headline">¶</a></h1>
+<p>SQLAlchemy object-relational configuration involves the
+combination of <a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal"><span class="pre">Table</span></code></a>, <a class="reference internal" href="../../mapping_api_ko.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal"><span class="pre">mapper()</span></code></a>, and class
+objects to define a mapped class.
+<a class="reference internal" href="api_ko.html#module-sqlalchemy.ext.declarative" title="sqlalchemy.ext.declarative"><code class="xref py py-mod docutils literal"><span class="pre">declarative</span></code></a> allows all three to be
+expressed at once within the class declaration. As much as
+possible, regular SQLAlchemy schema and ORM constructs are
+used directly, so that configuration between “classical” ORM
+usage and declarative remain highly similar.</p>
+<p>As a simple example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="k">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="k">import</span> <span class="n">declarative_base</span>
+
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">SomeClass</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;some_table&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span>  <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Above, the <code class="xref py py-func docutils literal"><span class="pre">declarative_base()</span></code> callable returns a new base class from
+which all mapped classes should inherit. When the class definition is
+completed, a new <a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal"><span class="pre">Table</span></code></a> and <a class="reference internal" href="../../mapping_api_ko.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal"><span class="pre">mapper()</span></code></a> will have been generated.</p>
+<p>The resulting table and mapper are accessible via
+<code class="docutils literal"><span class="pre">__table__</span></code> and <code class="docutils literal"><span class="pre">__mapper__</span></code> attributes on the
+<code class="docutils literal"><span class="pre">SomeClass</span></code> class:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># access the mapped Table</span>
+<span class="n">SomeClass</span><span class="o">.</span><span class="n">__table__</span>
+
+<span class="c1"># access the Mapper</span>
+<span class="n">SomeClass</span><span class="o">.</span><span class="n">__mapper__</span>
+</pre></div>
+</div>
+<div class="section" id="defining-attributes">
+<h2>Defining Attributes<a class="headerlink" href="#defining-attributes" title="Permalink to this headline">¶</a></h2>
+<p>In the previous example, the <a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal"><span class="pre">Column</span></code></a> objects are
+automatically named with the name of the attribute to which they are
+assigned.</p>
+<p>To name columns explicitly with a name distinct from their mapped attribute,
+just give the column a name.  Below, column “some_table_id” is mapped to the
+“id” attribute of <cite>SomeClass</cite>, but in SQL will be represented as
+“some_table_id”:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SomeClass</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;some_table&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s2">&quot;some_table_id&quot;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Attributes may be added to the class after its construction, and they will be
+added to the underlying <a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal"><span class="pre">Table</span></code></a> and
+<a class="reference internal" href="../../mapping_api_ko.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal"><span class="pre">mapper()</span></code></a> definitions as appropriate:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SomeClass</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">Unicode</span><span class="p">)</span>
+<span class="n">SomeClass</span><span class="o">.</span><span class="n">related</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="n">RelatedInfo</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Classes which are constructed using declarative can interact freely
+with classes that are mapped explicitly with <a class="reference internal" href="../../mapping_api_ko.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal"><span class="pre">mapper()</span></code></a>.</p>
+<p>It is recommended, though not required, that all tables
+share the same underlying <a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.MetaData" title="sqlalchemy.schema.MetaData"><code class="xref py py-class docutils literal"><span class="pre">MetaData</span></code></a> object,
+so that string-configured <a class="reference internal" href="../../../core/constraints_ko.html#sqlalchemy.schema.ForeignKey" title="sqlalchemy.schema.ForeignKey"><code class="xref py py-class docutils literal"><span class="pre">ForeignKey</span></code></a>
+references can be resolved without issue.</p>
+</div>
+<div class="section" id="accessing-the-metadata">
+<h2>Accessing the MetaData<a class="headerlink" href="#accessing-the-metadata" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="xref py py-func docutils literal"><span class="pre">declarative_base()</span></code> base class contains a
+<a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.MetaData" title="sqlalchemy.schema.MetaData"><code class="xref py py-class docutils literal"><span class="pre">MetaData</span></code></a> object where newly defined
+<a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal"><span class="pre">Table</span></code></a> objects are collected. This object is
+intended to be accessed directly for
+<a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.MetaData" title="sqlalchemy.schema.MetaData"><code class="xref py py-class docutils literal"><span class="pre">MetaData</span></code></a>-specific operations. Such as, to issue
+CREATE statements for all tables:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;sqlite://&#39;</span><span class="p">)</span>
+<span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="xref py py-func docutils literal"><span class="pre">declarative_base()</span></code> can also receive a pre-existing
+<a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.MetaData" title="sqlalchemy.schema.MetaData"><code class="xref py py-class docutils literal"><span class="pre">MetaData</span></code></a> object, which allows a
+declarative setup to be associated with an already
+existing traditional collection of <a class="reference internal" href="../../../core/metadata_ko.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal"><span class="pre">Table</span></code></a>
+objects:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mymetadata</span> <span class="o">=</span> <span class="n">MetaData</span><span class="p">()</span>
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="n">mymetadata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="class-constructor">
+<h2>Class Constructor<a class="headerlink" href="#class-constructor" title="Permalink to this headline">¶</a></h2>
+<p>As a convenience feature, the <code class="xref py py-func docutils literal"><span class="pre">declarative_base()</span></code> sets a default
+constructor on classes which takes keyword arguments, and assigns them
+to the named attributes:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="n">Engineer</span><span class="p">(</span><span class="n">primary_language</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mapper-configuration">
+<h2>Mapper Configuration<a class="headerlink" href="#mapper-configuration" title="Permalink to this headline">¶</a></h2>
+<p>Declarative makes use of the <a class="reference internal" href="../../mapping_api_ko.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal"><span class="pre">mapper()</span></code></a> function internally
+when it creates the mapping to the declared table.   The options
+for <a class="reference internal" href="../../mapping_api_ko.html#sqlalchemy.orm.mapper" title="sqlalchemy.orm.mapper"><code class="xref py py-func docutils literal"><span class="pre">mapper()</span></code></a> are passed directly through via the
+<code class="docutils literal"><span class="pre">__mapper_args__</span></code> class attribute.  As always, arguments which reference
+locally mapped columns can reference them directly from within the
+class declaration:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+
+<span class="k">class</span> <span class="nc">Widget</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;widgets&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">__mapper_args__</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;version_id_col&#39;</span><span class="p">:</span> <span class="n">timestamp</span><span class="p">,</span>
+                    <span class="s1">&#39;version_id_generator&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+                <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="defining-sql-expressions">
+<span id="declarative-sql-expressions"></span><h2>Defining SQL Expressions<a class="headerlink" href="#defining-sql-expressions" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference internal" href="../../mapped_sql_expr_ko.html#mapper-sql-expressions"><span class="std std-ref">SQL Expressions as Mapped Attributes</span></a> for examples on declaratively
+mapping attributes to SQL expressions.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="relationships.html" class="btn btn-neutral float-right" title="Configuring Relationships" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Declarative" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.2.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

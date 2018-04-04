@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Loading Objects &mdash; SQLAlchemy 1.2.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="SQLAlchemy 1.2.4 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents_ko.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro_ko.html">개요</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index_ko.html">SQLAlchemy ORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index_ko.html">SQLAlchemy core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index_ko.html">다이얼렉트(Dialects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index_ko.html">자주 물어보는 질문</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors_ko.html">오류 메세지</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index_ko.html">변경사항과 마이그레이션</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents_ko.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents_ko.html">Docs</a> &raquo;</li>
+        
+      <li>Loading Objects</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy/blob/docs-korean/doc/build/orm/loading_objects_ko.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="loading-objects">
+<h1>Loading Objects<a class="headerlink" href="#loading-objects" title="Permalink to this headline">¶</a></h1>
+<p>Notes and features regarding the general loading of mapped objects.</p>
+<p>For an in-depth introduction to querying with the SQLAlchemy ORM, please see the <a class="reference internal" href="tutorial_ko.html#ormtutorial-toplevel"><span class="std std-ref">ORM 튜토리얼</span></a>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="loading_columns.html">Loading Columns</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="loading_columns.html#deferred-column-loading">Deferred Column Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_columns.html#column-bundles">Column Bundles</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="loading_relationships.html">Relationship Loading Techniques</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="loading_relationships.html#configuring-loader-strategies-at-mapping-time">Configuring Loader Strategies at Mapping Time</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_relationships.html#controlling-loading-via-options">Controlling Loading via Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_relationships.html#lazy-loading">Lazy Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_relationships.html#joined-eager-loading">Joined Eager Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_relationships.html#subquery-eager-loading">Subquery Eager Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_relationships.html#select-in-loading">Select IN loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_relationships.html#what-kind-of-loading-to-use">What Kind of Loading to Use ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_relationships.html#polymorphic-eager-loading">Polymorphic Eager Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_relationships.html#wildcard-loading-strategies">Wildcard Loading Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_relationships.html#routing-explicit-joins-statements-into-eagerly-loaded-collections">Routing Explicit Joins/Statements into Eagerly Loaded Collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_relationships.html#creating-custom-load-rules">Creating Custom Load Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_relationships.html#relationship-loader-api">Relationship Loader API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inheritance_loading.html">Loading Inheritance Hierarchies</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inheritance_loading.html#using-with-polymorphic">Using with_polymorphic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inheritance_loading.html#polymorphic-selectin-loading">Polymorphic Selectin Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inheritance_loading.html#referring-to-specific-subtypes-on-relationships">Referring to specific subtypes on relationships</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inheritance_loading.html#loading-objects-with-joined-table-inheritance">Loading objects with joined table inheritance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inheritance_loading.html#loading-objects-with-single-table-inheritance">Loading objects with single table inheritance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inheritance_loading.html#inheritance-loading-api">Inheritance Loading API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="constructors.html">Constructors and Object Initialization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query.html">Query API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="query.html#the-query-object">The Query Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="query.html#orm-specific-query-constructs">ORM-Specific Query Constructs</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

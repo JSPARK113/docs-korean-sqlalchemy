@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Schema Definition Language &mdash; SQLAlchemy 1.2.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="SQLAlchemy 1.2.4 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents_ko.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro_ko.html">개요</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../orm/index_ko.html">SQLAlchemy ORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index_ko.html">SQLAlchemy core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index_ko.html">다이얼렉트(Dialects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index_ko.html">자주 물어보는 질문</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors_ko.html">오류 메세지</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index_ko.html">변경사항과 마이그레이션</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents_ko.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents_ko.html">Docs</a> &raquo;</li>
+        
+      <li>Schema Definition Language</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy/blob/docs-korean/doc/build/core/schema_ko.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-sqlalchemy.schema">
+<span id="schema-definition-language"></span><span id="schema-toplevel"></span><h1>Schema Definition Language<a class="headerlink" href="#module-sqlalchemy.schema" title="Permalink to this headline">¶</a></h1>
+<p>This section references SQLAlchemy <strong>schema metadata</strong>, a comprehensive system of describing and inspecting
+database schemas.</p>
+<p>The core of SQLAlchemy’s query and object mapping operations are supported by
+<em>database metadata</em>, which is comprised of Python objects that describe tables
+and other schema-level objects. These objects are at the core of three major
+types of operations - issuing CREATE and DROP statements (known as <em>DDL</em>),
+constructing SQL queries, and expressing information about structures that
+already exist within the database.</p>
+<p>Database metadata can be expressed by explicitly naming the various components
+and their properties, using constructs such as
+<a class="reference internal" href="metadata_ko.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal"><span class="pre">Table</span></code></a>, <a class="reference internal" href="metadata_ko.html#sqlalchemy.schema.Column" title="sqlalchemy.schema.Column"><code class="xref py py-class docutils literal"><span class="pre">Column</span></code></a>,
+<a class="reference internal" href="constraints_ko.html#sqlalchemy.schema.ForeignKey" title="sqlalchemy.schema.ForeignKey"><code class="xref py py-class docutils literal"><span class="pre">ForeignKey</span></code></a> and
+<a class="reference internal" href="defaults_ko.html#sqlalchemy.schema.Sequence" title="sqlalchemy.schema.Sequence"><code class="xref py py-class docutils literal"><span class="pre">Sequence</span></code></a>, all of which are imported from the
+<code class="docutils literal"><span class="pre">sqlalchemy.schema</span></code> package. It can also be generated by SQLAlchemy using a
+process called <em>reflection</em>, which means you start with a single object such
+as <a class="reference internal" href="metadata_ko.html#sqlalchemy.schema.Table" title="sqlalchemy.schema.Table"><code class="xref py py-class docutils literal"><span class="pre">Table</span></code></a>, assign it a name, and then instruct
+SQLAlchemy to load all the additional information related to that name from a
+particular engine source.</p>
+<p>A key feature of SQLAlchemy’s database metadata constructs is that they are
+designed to be used in a <em>declarative</em> style which closely resembles that of
+real DDL. They are therefore most intuitive to those who have some background
+in creating real schema generation scripts.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="metadata.html">Describing Databases with MetaData</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#accessing-tables-and-columns">Accessing Tables and Columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#creating-and-dropping-database-tables">Creating and Dropping Database Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#altering-schemas-through-migrations">Altering Schemas through Migrations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#specifying-the-schema-name">Specifying the Schema Name</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#backend-specific-options">Backend-Specific Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#column-table-metadata-api">Column, Table, MetaData API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reflection.html">Reflecting Database Objects</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reflection.html#overriding-reflected-columns">Overriding Reflected Columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reflection.html#reflecting-views">Reflecting Views</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reflection.html#reflecting-all-tables-at-once">Reflecting All Tables at Once</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reflection.html#fine-grained-reflection-with-inspector">Fine Grained Reflection with Inspector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reflection.html#limitations-of-reflection">Limitations of Reflection</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="defaults.html">Column Insert/Update Defaults</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="defaults.html#scalar-defaults">Scalar Defaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="defaults.html#python-executed-functions">Python-Executed Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="defaults.html#sql-expressions">SQL Expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="defaults.html#server-side-defaults">Server Side Defaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="defaults.html#triggered-columns">Triggered Columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="defaults.html#defining-sequences">Defining Sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="defaults.html#default-objects-api">Default Objects API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="constraints.html">Defining Constraints and Indexes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html#defining-foreign-keys">Defining Foreign Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html#unique-constraint">UNIQUE Constraint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html#check-constraint">CHECK Constraint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html#primary-key-constraint">PRIMARY KEY Constraint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html#setting-up-constraints-when-using-the-declarative-orm-extension">Setting up Constraints when using the Declarative ORM Extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html#configuring-constraint-naming-conventions">Configuring Constraint Naming Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html#constraints-api">Constraints API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html#indexes">Indexes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html#index-api">Index API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ddl.html">Customizing DDL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ddl.html#custom-ddl">Custom DDL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddl.html#controlling-ddl-sequences">Controlling DDL Sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddl.html#using-the-built-in-ddlelement-classes">Using the built-in DDLElement Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddl.html#ddl-expression-constructs-api">DDL Expression Constructs API</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

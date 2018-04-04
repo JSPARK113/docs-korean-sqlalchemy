@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SQLAlchemy core &mdash; SQLAlchemy 1.2.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="SQLAlchemy 1.2.4 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents_ko.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro_ko.html">개요</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../orm/index_ko.html">SQLAlchemy ORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index_ko.html">SQLAlchemy core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dialects/index_ko.html">다이얼렉트(Dialects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index_ko.html">자주 물어보는 질문</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors_ko.html">오류 메세지</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index_ko.html">변경사항과 마이그레이션</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents_ko.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents_ko.html">Docs</a> &raquo;</li>
+        
+      <li>SQLAlchemy core</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy/blob/docs-korean/doc/build/core/index.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sqlalchemy-core">
+<span id="core-toplevel"></span><h1>SQLAlchemy core<a class="headerlink" href="#sqlalchemy-core" title="Permalink to this headline">¶</a></h1>
+<p>The breadth of SQLAlchemy’s SQL rendering engine, DBAPI integration,
+transaction integration, and schema description services are documented here.
+In contrast to the ORM’s domain-centric mode of usage, the SQL Expression
+Language provides a schema-centric usage paradigm.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">SQL Expression Language Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#version-check">Version Check</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#connecting">Connecting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#define-and-create-tables">Define and Create Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#insert-expressions">Insert Expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#executing">Executing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#executing-multiple-statements">Executing Multiple Statements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#selecting">Selecting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#operators">Operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#conjunctions">Conjunctions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#using-textual-sql">Using Textual SQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#using-aliases">Using Aliases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#using-joins">Using Joins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#everything-else">Everything Else</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#inserts-updates-and-deletes">Inserts, Updates and Deletes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#further-reference">Further Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="expression_api.html">SQL Statements and Expressions API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sqlelement.html">Column Elements and Expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selectable.html">Selectables, Tables, FROM objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dml.html">Insert, Updates, Deletes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions.html">SQL and Generic Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compiler.html">Custom SQL Constructs and Compilation Extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serializer.html">Expression Serializer Extension</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="schema.html">Schema Definition Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html">Describing Databases with MetaData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reflection.html">Reflecting Database Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="defaults.html">Column Insert/Update Defaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Defining Constraints and Indexes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddl.html">Customizing DDL</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="types.html">Column and Data Types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="type_basics.html">Column and Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom_types.html">Custom Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type_api.html">Base Type API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="engines_connections.html">Engine and Connection Use</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="engines.html">Engine Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="connections.html">Working with Engines and Connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pooling.html">Connection Pooling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="events.html">Core Events</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_basics.html">Core API Basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="event.html">Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inspection.html">Runtime Inspection API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interfaces.html">Deprecated Event Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Core Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals.html">Core Internals</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

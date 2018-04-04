@@ -1,0 +1,328 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>다이얼렉트(Dialects) &mdash; SQLAlchemy 1.2.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/changelog.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../_static/sphinx_paramlinks.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+        <link rel="copyright" title="Copyright" href="../copyright.html"/>
+    <link rel="top" title="SQLAlchemy 1.2.4 documentation" href="../index.html"/>
+        <link rel="next" title="Firebird" href="firebird.html"/>
+        <link rel="prev" title="Core Internals" href="../core/internals.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../contents_ko.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro_ko.html">개요</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../orm/index_ko.html">SQLAlchemy ORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index_ko.html">SQLAlchemy core</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">다이얼렉트(Dialects)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="firebird.html">Firebird</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mssql.html">Microsoft SQL Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mysql.html">MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oracle.html">Oracle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postgresql.html">PostgreSQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sqlite.html">SQLite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sybase.html">Sybase</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq/index_ko.html">자주 물어보는 질문</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../errors_ko.html">오류 메세지</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/index_ko.html">변경사항과 마이그레이션</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../contents_ko.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../contents_ko.html">Docs</a> &raquo;</li>
+        
+      <li>다이얼렉트(Dialects)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy/blob/docs-korean/doc/build/dialects/index_ko.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dialects">
+<span id="dialect-toplevel"></span><h1>다이얼렉트(Dialects)<a class="headerlink" href="#dialects" title="Permalink to this headline">¶</a></h1>
+<p>The <strong>dialect</strong> is the system SQLAlchemy uses to communicate with various types of <a class="reference internal" href="../glossary_ko.html#term-dbapi"><span class="xref std std-term">DBAPI</span></a> implementations and databases.
+The sections that follow contain reference documentation and notes specific to the usage of each backend, as well as notes
+for the various DBAPIs.</p>
+<p>All dialects require that an appropriate DBAPI driver is installed.</p>
+<div class="section" id="included-dialects">
+<h2>Included Dialects<a class="headerlink" href="#included-dialects" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="firebird.html">Firebird</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mssql.html">Microsoft SQL Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mysql.html">MySQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oracle.html">Oracle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="postgresql.html">PostgreSQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sqlite.html">SQLite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sybase.html">Sybase</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="external-dialects">
+<span id="external-toplevel"></span><h2>External Dialects<a class="headerlink" href="#external-dialects" title="Permalink to this headline">¶</a></h2>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 0.8: </span>As of SQLAlchemy 0.8, several dialects have been moved to external
+projects, and dialects for new databases will also be published
+as external projects.   The rationale here is to keep the base
+SQLAlchemy install and test suite from growing inordinately large.</p>
+<p>The “classic” dialects such as SQLite, MySQL, PostgreSQL, Oracle,
+SQL Server, and Firebird will remain in the Core for the time being.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 1.0: </span>The Drizzle dialect has been moved into the third party system.</p>
+</div>
+<p>Current external dialect projects for SQLAlchemy include:</p>
+<div class="section" id="production-ready">
+<h3>Production Ready<a class="headerlink" href="#production-ready" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="http://code.google.com/p/ibm-db/wiki/README">ibm_db_sa</a> - driver for IBM DB2 and Informix,
+developed jointly by IBM and SQLAlchemy developers.</li>
+<li><a class="reference external" href="https://pypi.python.org/pypi/sqlalchemy-redshift">sqlalchemy-redshift</a> - driver for Amazon Redshift, adapts
+the existing PostgreSQL/psycopg2 driver.</li>
+<li><a class="reference external" href="https://github.com/blue-yonder/sqlalchemy_exasol">sqlalchemy_exasol</a> - driver for EXASolution.</li>
+<li><a class="reference external" href="https://github.com/sqlanywhere/sqlalchemy-sqlany">sqlalchemy-sqlany</a> - driver for SAP Sybase SQL
+Anywhere, developed by SAP.</li>
+<li><a class="reference external" href="https://github.com/gijzelaerr/sqlalchemy-monetdb">sqlalchemy-monetdb</a> - driver for MonetDB.</li>
+<li><a class="reference external" href="https://github.com/snowflakedb/snowflake-sqlalchemy">snowflake-sqlalchemy</a> - driver for <a class="reference external" href="https://www.snowflake.net/">Snowflake</a>.</li>
+<li><a class="reference external" href="https://github.com/m32/sqlalchemy-tds">sqlalchemy-tds</a> - driver for MS-SQL,
+on top of <a class="reference external" href="https://github.com/denisenkom/pytds">pythone-tds</a>.</li>
+<li><a class="reference external" href="https://github.com/crate/crate-python">crate</a> - driver for <a class="reference external" href="https://crate.io/">CrateDB</a>.</li>
+</ul>
+</div>
+<div class="section" id="experimental-incomplete">
+<h3>Experimental / Incomplete<a class="headerlink" href="#experimental-incomplete" title="Permalink to this headline">¶</a></h3>
+<p>Dialects that are in an incomplete state or are considered somewhat experimental.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://bitbucket.org/zzzeek/calchipan/">CALCHIPAN</a> - Adapts <a class="reference external" href="http://pandas.pydata.org/">Pandas</a> dataframes to SQLAlchemy.</li>
+<li><a class="reference external" href="https://bitbucket.org/zzzeek/sqlalchemy-cubrid">sqlalchemy-cubrid</a> - driver for the CUBRID database.</li>
+</ul>
+</div>
+<div class="section" id="attic">
+<h3>Attic<a class="headerlink" href="#attic" title="Permalink to this headline">¶</a></h3>
+<p>Dialects in the “attic” are those that were contributed for SQLAlchemy long ago
+but have received little attention or demand since then, and are now moved out to
+their own repositories in at best a semi-working state.
+Community members interested in these dialects should feel free to pick up on
+their current codebase and fork off into working libraries.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://bitbucket.org/zzzeek/sqlalchemy-access">sqlalchemy-access</a> - driver for Microsoft Access.</li>
+<li><a class="reference external" href="https://bitbucket.org/zzzeek/sqlalchemy-drizzle">sqlalchemy-drizzle</a> - driver for the Drizzle MySQL variant.</li>
+<li><a class="reference external" href="https://bitbucket.org/zzzeek/sqlalchemy-informixdb">sqlalchemy-informixdb</a> - driver for the informixdb DBAPI.</li>
+<li><a class="reference external" href="https://bitbucket.org/zzzeek/sqlalchemy-maxdb">sqlalchemy-maxdb</a> - driver for the MaxDB database</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="firebird.html" class="btn btn-neutral float-right" title="Firebird" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../core/internals.html" class="btn btn-neutral" title="Core Internals" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

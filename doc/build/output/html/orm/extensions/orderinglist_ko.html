@@ -1,0 +1,448 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Ordering List &mdash; SQLAlchemy 1.2.4 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/changelog.css" type="text/css" />
+  
+    <link rel="stylesheet" href="../../_static/sphinx_paramlinks.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+        <link rel="copyright" title="Copyright" href="../../copyright.html"/>
+    <link rel="top" title="SQLAlchemy 1.2.4 documentation" href="../../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../contents_ko.html" class="icon icon-home"> SQLAlchemy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro_ko.html">개요</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index_ko.html">SQLAlchemy ORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../core/index_ko.html">SQLAlchemy core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dialects/index_ko.html">다이얼렉트(Dialects)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/index_ko.html">자주 물어보는 질문</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../errors_ko.html">오류 메세지</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog/index_ko.html">변경사항과 마이그레이션</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../contents_ko.html">SQLAlchemy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../contents_ko.html">Docs</a> &raquo;</li>
+        
+      <li>Ordering List</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/VeranosTech/docs-korean-sqlalchemy/blob/docs-korean/doc/build/orm/extensions/orderinglist_ko.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-sqlalchemy.ext.orderinglist">
+<span id="ordering-list"></span><h1>Ordering List<a class="headerlink" href="#module-sqlalchemy.ext.orderinglist" title="Permalink to this headline">¶</a></h1>
+<p>A custom list that manages index/position information for contained
+elements.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">Jason Kirtland</td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal"><span class="pre">orderinglist</span></code> is a helper for mutable ordered relationships.  It will
+intercept list operations performed on a <a class="reference internal" href="../relationship_api_ko.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal"><span class="pre">relationship()</span></code></a>-managed
+collection and
+automatically synchronize changes in list position onto a target scalar
+attribute.</p>
+<p>Example: A <code class="docutils literal"><span class="pre">slide</span></code> table, where each row refers to zero or more entries
+in a related <code class="docutils literal"><span class="pre">bullet</span></code> table.   The bullets within a slide are
+displayed in order based on the value of the <code class="docutils literal"><span class="pre">position</span></code> column in the
+<code class="docutils literal"><span class="pre">bullet</span></code> table.   As entries are reordered in memory, the value of the
+<code class="docutils literal"><span class="pre">position</span></code> attribute should be updated to reflect the new sort order:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Slide</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;slide&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+
+    <span class="n">bullets</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Bullet&quot;</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="s2">&quot;Bullet.position&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Bullet</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;bullet&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">slide_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;slide.id&#39;</span><span class="p">))</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The standard relationship mapping will produce a list-like attribute on each
+<code class="docutils literal"><span class="pre">Slide</span></code> containing all related <code class="docutils literal"><span class="pre">Bullet</span></code> objects,
+but coping with changes in ordering is not handled automatically.
+When appending a <code class="docutils literal"><span class="pre">Bullet</span></code> into <code class="docutils literal"><span class="pre">Slide.bullets</span></code>, the <code class="docutils literal"><span class="pre">Bullet.position</span></code>
+attribute will remain unset until manually assigned.   When the <code class="docutils literal"><span class="pre">Bullet</span></code>
+is inserted into the middle of the list, the following <code class="docutils literal"><span class="pre">Bullet</span></code> objects
+will also need to be renumbered.</p>
+<p>The <a class="reference internal" href="#sqlalchemy.ext.orderinglist.OrderingList" title="sqlalchemy.ext.orderinglist.OrderingList"><code class="xref py py-class docutils literal"><span class="pre">OrderingList</span></code></a> object automates this task, managing the
+<code class="docutils literal"><span class="pre">position</span></code> attribute on all <code class="docutils literal"><span class="pre">Bullet</span></code> objects in the collection.  It is
+constructed using the <a class="reference internal" href="#sqlalchemy.ext.orderinglist.ordering_list" title="sqlalchemy.ext.orderinglist.ordering_list"><code class="xref py py-func docutils literal"><span class="pre">ordering_list()</span></code></a> factory:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.ext.orderinglist</span> <span class="k">import</span> <span class="n">ordering_list</span>
+
+<span class="n">Base</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Slide</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;slide&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+
+    <span class="n">bullets</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Bullet&quot;</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="s2">&quot;Bullet.position&quot;</span><span class="p">,</span>
+                            <span class="n">collection_class</span><span class="o">=</span><span class="n">ordering_list</span><span class="p">(</span><span class="s1">&#39;position&#39;</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">Bullet</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;bullet&#39;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">slide_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;slide.id&#39;</span><span class="p">))</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With the above mapping the <code class="docutils literal"><span class="pre">Bullet.position</span></code> attribute is managed:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">Slide</span><span class="p">()</span>
+<span class="n">s</span><span class="o">.</span><span class="n">bullets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bullet</span><span class="p">())</span>
+<span class="n">s</span><span class="o">.</span><span class="n">bullets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bullet</span><span class="p">())</span>
+<span class="n">s</span><span class="o">.</span><span class="n">bullets</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">position</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span>
+<span class="n">s</span><span class="o">.</span><span class="n">bullets</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Bullet</span><span class="p">())</span>
+<span class="n">s</span><span class="o">.</span><span class="n">bullets</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">position</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="#sqlalchemy.ext.orderinglist.OrderingList" title="sqlalchemy.ext.orderinglist.OrderingList"><code class="xref py py-class docutils literal"><span class="pre">OrderingList</span></code></a> construct only works with <strong>changes</strong> to a
+collection, and not the initial load from the database, and requires that the
+list be sorted when loaded.  Therefore, be sure to specify <code class="docutils literal"><span class="pre">order_by</span></code> on the
+<a class="reference internal" href="../relationship_api_ko.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal"><span class="pre">relationship()</span></code></a> against the target ordering attribute, so that the
+ordering is correct when first loaded.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p><a class="reference internal" href="#sqlalchemy.ext.orderinglist.OrderingList" title="sqlalchemy.ext.orderinglist.OrderingList"><code class="xref py py-class docutils literal"><span class="pre">OrderingList</span></code></a> only provides limited functionality when a primary
+key column or unique column is the target of the sort.  Operations
+that are unsupported or are problematic include:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>two entries must trade values.  This is not supported directly in the
+case of a primary key or unique constraint because it means at least
+one row would need to be temporarily removed first, or changed to
+a third, neutral value while the switch occurs.</li>
+<li>an entry must be deleted in order to make room for a new entry.
+SQLAlchemy’s unit of work performs all INSERTs before DELETEs within a
+single flush.  In the case of a primary key, it will trade
+an INSERT/DELETE of the same primary key for an UPDATE statement in order
+to lessen the impact of this limitation, however this does not take place
+for a UNIQUE column.
+A future feature will allow the “DELETE before INSERT” behavior to be
+possible, allevating this limitation, though this feature will require
+explicit configuration at the mapper level for sets of columns that
+are to be handled in this way.</li>
+</ul>
+</div></blockquote>
+</div>
+<p><a class="reference internal" href="#sqlalchemy.ext.orderinglist.ordering_list" title="sqlalchemy.ext.orderinglist.ordering_list"><code class="xref py py-func docutils literal"><span class="pre">ordering_list()</span></code></a> takes the name of the related object’s ordering
+attribute as an argument.  By default, the zero-based integer index of the
+object’s position in the <a class="reference internal" href="#sqlalchemy.ext.orderinglist.ordering_list" title="sqlalchemy.ext.orderinglist.ordering_list"><code class="xref py py-func docutils literal"><span class="pre">ordering_list()</span></code></a> is synchronized with the
+ordering attribute: index 0 will get position 0, index 1 position 1, etc.  To
+start numbering at 1 or some other integer, provide <code class="docutils literal"><span class="pre">count_from=1</span></code>.</p>
+<div class="section" id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="sqlalchemy.ext.orderinglist.ordering_list">
+<code class="descclassname">sqlalchemy.ext.orderinglist.</code><code class="descname">ordering_list</code><span class="sig-paren">(</span><em>attr</em>, <em>count_from=None</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#sqlalchemy.ext.orderinglist.ordering_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepares an <a class="reference internal" href="#sqlalchemy.ext.orderinglist.OrderingList" title="sqlalchemy.ext.orderinglist.OrderingList"><code class="xref py py-class docutils literal"><span class="pre">OrderingList</span></code></a> factory for use in mapper definitions.</p>
+<p>Returns an object suitable for use as an argument to a Mapper
+relationship’s <code class="docutils literal"><span class="pre">collection_class</span></code> option.  e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy.ext.orderinglist</span> <span class="k">import</span> <span class="n">ordering_list</span>
+
+<span class="k">class</span> <span class="nc">Slide</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;slide&#39;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+
+    <span class="n">bullets</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s2">&quot;Bullet&quot;</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="s2">&quot;Bullet.position&quot;</span><span class="p">,</span>
+                            <span class="n">collection_class</span><span class="o">=</span><span class="n">ordering_list</span><span class="p">(</span><span class="s1">&#39;position&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><span class="target" id="sqlalchemy.ext.orderinglist.ordering_list.params.attr"></span><strong>attr</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.ext.orderinglist.ordering_list.params.attr">¶</a> – Name of the mapped attribute to use for storage and retrieval of
+ordering information</li>
+<li><span class="target" id="sqlalchemy.ext.orderinglist.ordering_list.params.count_from"></span><strong>count_from</strong><a class="paramlink headerlink reference internal" href="#sqlalchemy.ext.orderinglist.ordering_list.params.count_from">¶</a> – Set up an integer-based ordering, starting at <code class="docutils literal"><span class="pre">count_from</span></code>.  For
+example, <code class="docutils literal"><span class="pre">ordering_list('pos',</span> <span class="pre">count_from=1)</span></code> would create a 1-based
+list in SQL, storing the value in the ‘pos’ column.  Ignored if
+<code class="docutils literal"><span class="pre">ordering_func</span></code> is supplied.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Additional arguments are passed to the <a class="reference internal" href="#sqlalchemy.ext.orderinglist.OrderingList" title="sqlalchemy.ext.orderinglist.OrderingList"><code class="xref py py-class docutils literal"><span class="pre">OrderingList</span></code></a> constructor.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sqlalchemy.ext.orderinglist.count_from_0">
+<code class="descclassname">sqlalchemy.ext.orderinglist.</code><code class="descname">count_from_0</code><span class="sig-paren">(</span><em>index</em>, <em>collection</em><span class="sig-paren">)</span><a class="headerlink" href="#sqlalchemy.ext.orderinglist.count_from_0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numbering function: consecutive integers starting at 0.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sqlalchemy.ext.orderinglist.count_from_1">
+<code class="descclassname">sqlalchemy.ext.orderinglist.</code><code class="descname">count_from_1</code><span class="sig-paren">(</span><em>index</em>, <em>collection</em><span class="sig-paren">)</span><a class="headerlink" href="#sqlalchemy.ext.orderinglist.count_from_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numbering function: consecutive integers starting at 1.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sqlalchemy.ext.orderinglist.count_from_n_factory">
+<code class="descclassname">sqlalchemy.ext.orderinglist.</code><code class="descname">count_from_n_factory</code><span class="sig-paren">(</span><em>start</em><span class="sig-paren">)</span><a class="headerlink" href="#sqlalchemy.ext.orderinglist.count_from_n_factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numbering function: consecutive integers starting at arbitrary start.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="sqlalchemy.ext.orderinglist.OrderingList">
+<em class="property">class </em><code class="descclassname">sqlalchemy.ext.orderinglist.</code><code class="descname">OrderingList</code><span class="sig-paren">(</span><em>ordering_attr=None</em>, <em>ordering_func=None</em>, <em>reorder_on_append=False</em><span class="sig-paren">)</span><a class="headerlink" href="#sqlalchemy.ext.orderinglist.OrderingList" title="Permalink to this definition">¶</a></dt>
+<dd><p>A custom list that manages position information for its children.</p>
+<p>The <a class="reference internal" href="#sqlalchemy.ext.orderinglist.OrderingList" title="sqlalchemy.ext.orderinglist.OrderingList"><code class="xref py py-class docutils literal"><span class="pre">OrderingList</span></code></a> object is normally set up using the
+<a class="reference internal" href="#sqlalchemy.ext.orderinglist.ordering_list" title="sqlalchemy.ext.orderinglist.ordering_list"><code class="xref py py-func docutils literal"><span class="pre">ordering_list()</span></code></a> factory function, used in conjunction with
+the <a class="reference internal" href="../relationship_api_ko.html#sqlalchemy.orm.relationship" title="sqlalchemy.orm.relationship"><code class="xref py py-func docutils literal"><span class="pre">relationship()</span></code></a> function.</p>
+<dl class="method">
+<dt id="sqlalchemy.ext.orderinglist.OrderingList.append">
+<code class="descname">append</code><span class="sig-paren">(</span><em>object</em><span class="sig-paren">)</span> &#x2192; None – append object to end<a class="headerlink" href="#sqlalchemy.ext.orderinglist.OrderingList.append" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="sqlalchemy.ext.orderinglist.OrderingList.insert">
+<code class="descname">insert</code><span class="sig-paren">(</span><em>index</em>, <em>entity</em><span class="sig-paren">)</span><a class="headerlink" href="#sqlalchemy.ext.orderinglist.OrderingList.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>L.insert(index, object) – insert object before index</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sqlalchemy.ext.orderinglist.OrderingList.pop">
+<code class="descname">pop</code><span class="sig-paren">(</span><span class="optional">[</span><em>index</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; item – remove and return item at index (default last).<a class="headerlink" href="#sqlalchemy.ext.orderinglist.OrderingList.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises IndexError if list is empty or index is out of range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sqlalchemy.ext.orderinglist.OrderingList.remove">
+<code class="descname">remove</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span> &#x2192; None – remove first occurrence of value.<a class="headerlink" href="#sqlalchemy.ext.orderinglist.OrderingList.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises ValueError if the value is not present.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sqlalchemy.ext.orderinglist.OrderingList.reorder">
+<code class="descname">reorder</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sqlalchemy.ext.orderinglist.OrderingList.reorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronize ordering for the entire collection.</p>
+<p>Sweeps through the list and ensures that each object has accurate
+ordering information set.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2007-2018, the SQLAlchemy authors and contributors.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.2.4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
