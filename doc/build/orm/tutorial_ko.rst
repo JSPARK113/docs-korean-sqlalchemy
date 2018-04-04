@@ -124,7 +124,7 @@ SQLAlchemy에서 이 두 작업은 :ref:`declarative_toplevel`\ 라는 시스템
     이 튜토리얼에서는 제대로 된 ``User`` 객체를 보여주기 위해 구현한다.
 
 선언 시스템을 사용하는 클래스는 ``__tablename__`` 속성과
-primary key [#]_\ 가 되는 하나 이상의 :class:`.Column`\ 이 있어야 한다.
+기본 키 [#]_\ 가 되는 하나 이상의 :class:`.Column`\ 이 있어야 한다.
 SQLAlchemy는 클래스가 참조하는 테이블에 대해 어떠한 가정도 하지 않는다.
 테이블 이름이나 데이터 타입, 제약 사항에 대한 내장된 관례도 없다.
 그렇다고 템플릿이 있어야 하는 것도 아니다.
@@ -140,7 +140,7 @@ SQLAlchemy는 클래스가 참조하는 테이블에 대해 어떠한 가정도 
 매핑 과정에 클래스에 가해지는 작업만 제외하면 이 클래스는 일반적인 파이썬 클래스와 같으므로
 이 클래스에 어플리케이션에서 필요한 다른 메서드와 속성도 정의할 수 있다.
 
-.. [#] primary key가 왜 요구되는지에 대해서는 :ref:`faq_mapper_primary_key`\ 를
+.. [#] 기본 키가 왜 요구되는지에 대해서는 :ref:`faq_mapper_primary_key`\ 를
        참고하라.
 
 
@@ -199,7 +199,7 @@ SQLAlchemy는 이 객체를 자동 생성한다.
         id INTEGER NOT NULL, name VARCHAR,
         fullname VARCHAR,
         password VARCHAR,
-        PRIMARY KEY (id)
+        기본 키 (id)
     )
     ()
     COMMIT
@@ -221,7 +221,7 @@ SQLAlchemy는 이 객체를 자동 생성한다.
     :class:`~sqlalchemy.types.Numeric` 등에서 이용 가능한 precision/scale 필드는 테이블을
     생성할 때를 제외하고는 SQLAlchemy에 의해 참조되지 않는다.
 
-    추가적으로, Firebird와 Oracle은 새로운 primary key를 만들 때
+    추가적으로, Firebird와 Oracle은 새로운 기본 키를 만들 때
     시퀀스(sequence)가 필요한데 SQLAlchemy는 명시적 지시없이는 시퀀스를 생성하지 않는다.
     시퀀스를 만들려면 :class:`~sqlalchemy.schema.Sequence`\ 를 사용한다::
 
@@ -371,10 +371,10 @@ SQLAlchemy의 인스트루멘테이션(:term:`instrumentation`)은 일반적으�
 여기서 동작하는 ORM 개념은 :term:`identity map`\ 이다.
 identity map은 :class:`~sqlalchemy.orm.session.Session` 세션에 있는
 특정 행에 대한 모든 작업이 같은 데이터 셋에서 작동함을 보장한다.
-일단 특정한 primary key가 :class:`~sqlalchemy.orm.session.Session`\ 에 있으면
+일단 특정한 기본 키가 :class:`~sqlalchemy.orm.session.Session`\ 에 있으면
 :class:`~sqlalchemy.orm.session.Session`\ 의 모든 SQL 쿼리는
-항상 특정한 primary key에 대해 동일한 파이썬 객체를 반환한다.
-또한 세션 내에서 동일한 primary key를 이미 보유중인 두 번째 객체를 배치하려고 시도하면
+항상 특정한 기본 키에 대해 동일한 파이썬 객체를 반환한다.
+또한 세션 내에서 동일한 기본 키를 이미 보유중인 두 번째 객체를 배치하려고 시도하면
 에러가 발생한다.
 
 :func:`~sqlalchemy.orm.session.Session.add_all`\ 를 이용해서 ``User`` 객체를
@@ -463,7 +463,7 @@ SQLAlchemy는 기본적으로 이전 트랜잭션으로부터 얻은 데이터�
 
 .. topic:: 세션 객체의 상태
 
-   ``User`` 객체가 :class:`.Session`\ 밖에서, :class:`.Session`\ 안으로 primary key 없이
+   ``User`` 객체가 :class:`.Session`\ 밖에서, :class:`.Session`\ 안으로 기본 키 없이
    이동하면서 삽입되었고, 4가지 중 3가지의 가능한 "객체 상태"
    (**임시(transient)**, **대기(pending)**, **영속(persistent)**)
    사이에서 움직였다. 이 상태들과 그 의미를 알고 있는 것은 도움이 되므로
@@ -708,8 +708,8 @@ LIMIT과 OFFSET 옵션을 포함시킬 수 있고 ORDER BY와 함께 쓸 수도 
     ('ed', 'Ed Jones')
     {stop}<User(name='ed', fullname='Ed Jones', password='f8s7ccs')>
 
-Common Filter Operators
------------------------
+자주 쓰이는 필터 연산자
+----------------------------------------------
 
 아래는 :func:`~sqlalchemy.orm.query.Query.filter` 에서 가장
 일반적으로 쓰이는 연산자 목록이다:
@@ -743,7 +743,7 @@ Common Filter Operators
 
     query.filter(User.name.in_(['ed', 'wendy', 'jack']))
 
-    # works with query objects too:
+    # 쿼리문과 같이 쓸 수 있다.:
     query.filter(User.name.in_(
         session.query(User.name).filter(User.name.like('%ed%'))
     ))
@@ -756,7 +756,7 @@ Common Filter Operators
 
     query.filter(User.name == None)
 
-    # alternatively, if pep8/linters are a concern
+    # apep8/linter가 문제가 되면 다음처럼 쓸 수도 있다.
     query.filter(User.name.is_(None))
 
 * :meth:`IS NOT NULL <.ColumnOperators.isnot>`::
@@ -768,14 +768,14 @@ Common Filter Operators
 
 * :func:`AND <.sql.expression.and_>`::
 
-    # use and_()
+    # and_()를 쓰는 경우
     from sqlalchemy import and_
     query.filter(and_(User.name == 'ed', User.fullname == 'Ed Jones'))
 
-    # or send multiple expressions to .filter()
+    # .filter()에 복수 표현식을 넣는 경우
     query.filter(User.name == 'ed', User.fullname == 'Ed Jones')
 
-    # or chain multiple filter()/filter_by() calls
+    # filter()/filter_by()을 연속 호출하는 경우
     query.filter(User.name == 'ed').filter(User.fullname == 'Ed Jones')
 
  .. note::  파이썬 ``and`` 연산자가 **아니라** :func:`.and_`\ 를 사용하고 있는지
@@ -795,8 +795,9 @@ Common Filter Operators
 
  .. note::
 
-    :meth:`~.ColumnOperators.match`\ 는 데이터베이스 지정 ``MATCH``\ 나 ``CONTAINS`` 함수를
-    사용한다; 이 동작은 백엔드에 따라 다르며, SQLite 같은 몇몇 백엔드에서는 사용할 수 없다.
+    :meth:`~.ColumnOperators.match`\ 는 특정 데이터베이스만 제공하는 ``MATCH`` 명령이나
+    ``CONTAINS`` 함수를 사용한다.
+    이 동작은 백엔드에 따라 다르며, SQLite 같은 몇몇 백엔드에서는 사용할 수 없다.
 
 리스트와 스칼라 반환
 ---------------------------
@@ -836,8 +837,10 @@ Common Filter Operators
       {stop}<User(name='ed', fullname='Ed Jones', password='f8s7ccs')>
 
 * :meth:`~.Query.one()`\ 는 모든 행을 완전히 불러오고,
-  정확한 객체 아이덴티티나 복합 결과 행이 결과에
-  존재하지 않으면 에러를 발생시킨다. 여러 행이 찾아진 경우:
+  정확한 객체 행이나 복합 객체 행이 결과에
+  존재하지 않으면 에러를 발생시킨다.
+
+  여러 행이 찾아진 경우:
 
   .. sourcecode:: python+sql
 
@@ -885,11 +888,11 @@ Common Filter Operators
 SQL 문자열 직접 사용
 ----------------------------------
 
-리터럴 스트링은 :func:`~.expression.text` 구조로 사용을 명시함으로써
-:class:`~sqlalchemy.orm.query.Query`\ 에서 플렉서블하게
-사용할 수 있고 대부분의 메서드에 적용 가능하다. 예를 들어,
+:func:`~.expression.text` 생성자를 사용하면
+:class:`~sqlalchemy.orm.query.Query`\ 에서 리터럴 스트링을 쓸 수 있다.
+:func:`~.expression.text`\ 는
 :meth:`~sqlalchemy.orm.query.Query.filter()`\ 와
-:meth:`~sqlalchemy.orm.query.Query.order_by()`\ 가 있다:
+:meth:`~sqlalchemy.orm.query.Query.order_by()`\ 를 포함한 대부분의 메서드에 적용 가능하다.
 
 .. sourcecode:: python+sql
 
@@ -910,8 +913,8 @@ SQL 문자열 직접 사용
     mary
     fred
 
-바인드 파라미터는 콜론을 사용해서 스트링 기반 SQL로 지정될 수 있다.
-:meth:`~sqlalchemy.orm.query.Query.params()` 메서드를 사용해 값을 지정하라:
+바인드 파라미터(bind parameter)는 콜론을 써서 스트링 기반 SQL로 지정할 수 있다.
+이 때는 :meth:`~sqlalchemy.orm.query.Query.params()` 메서드로 값을 지정한다.:
 
 .. sourcecode:: python+sql
 
@@ -926,9 +929,10 @@ SQL 문자열 직접 사용
     (224, 'fred')
     {stop}<User(name='fred', fullname='Fred Flinstone', password='blah')>
 
-전체 명령을 나타내는 :func:`.text` 구조를
-:meth:`~sqlalchemy.orm.query.Query.from_statement()` 에 전달해서 완전한 스트링 기반 명령을 사용할 수 있다.
-추가적인 지정자 없이, 스트링 SQL에 있는 컬럼은 이름에 기반한 모델 컬럼과 매치된다.
+명령 전체를 감싸는 :func:`.text` 생성자를
+:meth:`~sqlalchemy.orm.query.Query.from_statement()`\ 에 전달하면
+순수한 SQL 명령 문자열을 쓸 수 있다.
+추가적인 지정자가 없어도 SQL 문자열에 있는 컬럼은 해당 이름에 기반한 모델 컬럼과 매치된다.
 아래는 모든 컬럼을 로드하기 위해 별표를 사용했다:
 
 .. sourcecode:: python+sql
@@ -940,12 +944,15 @@ SQL 문자열 직접 사용
     ('ed',)
     {stop}[<User(name='ed', fullname='Ed Jones', password='f8s7ccs')>]
 
-간단한 경우에는 name 에서 일치하는 컬럼이 작동하지만 중복된 컬럼 이름을 포함하는 복잡한 명령을 처리하거나
-특정 이름과 쉽게 일치하지 않는 익명화된 ORM 구조를 사용할 때는 다루기 어려워질 수 있다.
-추가적으로, 결과 행들을 처리할 때 필요하다고 판단되는 매핑된 컬럼에 존재하는 타이핑 동작이
-존재한다. 이 경우, :func:`~.expression.text` 구조가 텍스트 형식 SQL을 위치에 따라 Core나 ORM 매핑된
-컬럼 표현식에 연결해준다; 컬럼 표현식을 위치 인수로 :meth:`.TextClause.columns`\ 에 전달함으로써
-작업을 수행할 수 있다:
+간단한 경우에는 테이블 컬럼과 문자열 내의 이름이 일치하지만
+중복된 컬럼 이름을 포함하는 복잡한 명령을 처리하거나
+특정 이름과 쉽게 일치하지 않는 익명화된 ORM을 사용할 때는
+매칭이 어려워질 수 있다.
+또, 결과 행들을 처리할 때 필요하다고 판단되는 매핑된 컬럼에 존재하는 타이핑 동작이
+있을 수도 있다.
+이 때는 :func:`~.expression.text` 생성자가 텍스트 형식 SQL을 위치에 따라
+Core나 ORM-매핑된 컬럼 표현식에 연결해준다.
+컬럼 표현식을 위치 인수로 :meth:`.TextClause.columns`\ 에 전달하면 된다.
 
 .. sourcecode:: python+sql
 
@@ -959,12 +966,14 @@ SQL 문자열 직접 사용
 
 .. versionadded:: 1.1
 
-    :meth:`.TextClause.columns` 메서드는 현재 일반 텍스트 SQL 결과 집합에 위치상으로
-    일치하게 될 컬럼 표현식을 받아들여서 SQL 명령에서 컬럼 이름이 매치되거나 유니크해야 할
+    :meth:`.TextClause.columns` 메서드는 현재 일반 텍스트 SQL 결과 집합에
+    일치하게 될 컬럼 표현식을 인수의 위치(순서)로 확인하므로
+    SQL 명령에서 컬럼 이름이 동일하거나 유니크해야 할
     필요가 없어졌다.
 
-:func:`~.expression.text` 구조에서 selecting을 할 때, :class:`.Query`\ 는 여전히 반환될
-엔티티와 컬럼을 지정할 수 있다; 다른 경우처럼 ``query(User)`` 대신에 개별적으로 컬럼을 요청할 수도 있다:
+:func:`~.expression.text`\ 를 써서 쿼리를 할 때도 :class:`.Query`\ 는 여전히 반환될
+엔티티와 컬럼을 지정할 수 있다.
+다른 경우처럼 ``query(User)``\ 를 쓰는 대신에 컬럼을 개별적으로 요청할 수도 있다:
 
 .. sourcecode:: python+sql
 
@@ -981,8 +990,8 @@ SQL 문자열 직접 사용
     :ref:`sqlexpression_text` - Core 전용 쿼리 관점에서 설명된
     :func:`.text` 구조.
 
-Counting
---------
+카운팅(counting)
+--------------------------------
 
 :class:`~sqlalchemy.orm.query.Query`\ 는 카운팅을 위한 편리한 메서드인
 :meth:`~sqlalchemy.orm.query.Query.count()`\ 을 포함하고 있다:
@@ -1008,15 +1017,18 @@ Counting
     반환한다. 특정한 명령이 서브 쿼리가 존재하는 것을 절대 용납하지 않는 경우
     ``func.count()``\ 를 사용하라.
 
-:meth:`~.Query.count()` 메서드는 SQL 명령이 얼마만큼의 행을 반환해야 하는지를 결정하기
-위해 사용된다. 위에 있는 생성된 SQL을 보면 SQLAlchemy는 항상 쿼리 하려는 것을 서브쿼리에 넣고,
-그것으로부터 행을 센다. 몇몇 경우에는 더 간단한 ``SELECT count(*) FROM table``\ 로 축소될 수도
-있다. 그러나, 최신 버전의 SQLAlchemy는 더 명시적인 수단을 사용해서 정확한 SQL을 내보낼 수 있기 때문에
+:meth:`~.Query.count()` 메서드는 SQL 명령이 반환하는 행의 갯수를 알려준다.
+위에서 생성된 SQL을 보면 SQLAlchemy는 항상 쿼리 하려는 것을 서브쿼리에 넣고,
+그 결과으로부터 행을 센다.
+몇몇 경우에는 더 간단한 ``SELECT count(*) FROM table``\ 로 축소될 수도 있다.
+그러나, 최신 버전의 SQLAlchemy는 더 명시적인 수단을 사용해서
+정확한 SQL을 내보낼 수 있기 때문에
 이것이 언제 적헐한지를 추측하지 않는다
 
-특별히 "things to be counted"를 표시해야 하는 상황의 경우, "count" 함수를
-:attr:`~sqlalchemy.sql.expression.func` 구조에서 이용 가능한 ``func.count()`` 표현을
-사용해서 직접 지정할 수 있다. 아래에서는0 각각의 user name의 카운트를 반환하기 위해서 사용했다:
+특별히 어떤 것을 카운팅해야 하는지 명시해야 하는 경우에는 "count" 함수를
+:attr:`~sqlalchemy.sql.expression.func`\ 에서 ``func.count()`` 표현을
+사용해서 직접 지정할 수 있다.
+아래에서는 각각의 user name의 카운트를 반환하기 위해서 사용했다:
 
 .. sourcecode:: python+sql
 
@@ -1027,7 +1039,7 @@ Counting
     ()
     {stop}[(1, u'ed'), (1, u'fred'), (1, u'mary'), (1, u'wendy')]
 
-단순한 ``SELECT count(*) FROM table``\ 을 위해서, 아래처럼 적용할 수 있다:
+단순한 ``SELECT count(*) FROM table``\ 이 되도록 아래처럼 적용할 수도 있다:
 
 .. sourcecode:: python+sql
 
@@ -1037,8 +1049,7 @@ Counting
     ('*',)
     {stop}4
 
-만약 카운트를 직접 ``User`` primart key로 표현하면, :meth:`~.Query.select_from` 사용이
-제될 수 있다:
+기본 키를 카운트하는 경우에는 :meth:`~.Query.select_from` 명령을 쓰지 않아도 된다.:
 
 .. sourcecode:: python+sql
 
@@ -1050,14 +1061,14 @@ Counting
 
 .. _orm_tutorial_relationship:
 
-Building a Relationship
+릴레이션 생성
 =======================
 
-``User``\ 와 관련된 두 번째 테이블을 어떻게 매핑하고 쿼리할지 생각해보자.
-우리 시스템의 User는 그들의 username과 결합된 이메일 주소를 저장할 수 있다.
-이것은 ``User``\ 에서 이메일 주소를 저장하는 새로운 테이블(``addresses``\ 로 부를 것이다)
-로 향하는 기본적인 일대다 결합을 의미한다. declarative를 이용해, 매핑된 클래스 ``Address``\ 와 함께
-이 테이블을 정의할 것이다:
+``User`` 테이블과 관련된 두 번째 테이블을 어떻게 매핑하고 쿼리할지 생각해보자.
+User 테이블은 username과 연결된 이메일 주소를 저장할 수 있다.
+이는 ``User``\ 에서 이메일 주소를 저장하는 새로운 테이블(``addresses``\ 로 부를 것이다)
+로 향하는 기본적인 일대다 결합(one-to-many association)을 의미한다.
+선언 시스템을 이용해 매핑된 클래스 ``Address``\ 와 함께 이 테이블을 정의한다:
 
 .. sourcecode:: python
 
@@ -1082,7 +1093,7 @@ Building a Relationship
 적용하는 명령어로 이 컬럼에 있는 값은 반드시 지명된 외부의 컬럽에 존재하는 값과 :term:`constrained` 되어야
 한다는 것을 나타낸다. 이것은 관계형 데이터베이스의 핵심 기능 중 하나로, 연결되지 않은 테이블 집합을
 오버래핑된 풍부한 관계를 가질 수 있게 변환시켜주는 접착제다. 위의 :class:`.ForeignKey`\ 는 ``addresses.user_id`` 컬럼에 있는
-값은 반드시 ``users.id`` 컬럼에 있는 값과 묶여있어야 한다는 것을 나타낸다. 즉, 일종의 primary key다.
+값은 반드시 ``users.id`` 컬럼에 있는 값과 묶여있어야 한다는 것을 나타낸다. 즉, 일종의 기본 키다.
 
 
 두 번째 명령어 :func:`.relationship`\ 는 ORM에게 ``Address``\ 자체가 ``User`` 클래스와
@@ -1122,9 +1133,9 @@ Building a Relationship
 
 .. topic:: Did you know ?
 
-    * 대부분의 관계형 데이터베이스의 FOREIGN KEY 제약은 primary key 컬럼이나, UNIQUE 제약이
+    * 대부분의 관계형 데이터베이스의 FOREIGN KEY 제약은 기본 키 컬럼이나, UNIQUE 제약이
       걸려있는 컬럼과만 연결이 가능하다.
-    * 여러 primary key 컬럼을 참조하거나 여러 컬럼을 가지고 있는 FOREIGN KEY 제약은
+    * 여러 기본 키 컬럼을 참조하거나 여러 컬럼을 가지고 있는 FOREIGN KEY 제약은
       "composite foreign key"로 알려져 있다. 이 키는 위의 컬럼들의 하위 집합도
       참조할 수 있다.
     * FOREIGN KEY 컬럼은 참초하는 컬럼이나 행의 변와에 따라 자동적으로 자기자신을 업데이트 한다.
@@ -1145,7 +1156,7 @@ Building a Relationship
         id INTEGER NOT NULL,
         email_address VARCHAR NOT NULL,
         user_id INTEGER,
-        PRIMARY KEY (id),
+        기본 키 (id),
          FOREIGN KEY(user_id) REFERENCES users (id)
     )
     ()
@@ -1795,13 +1806,13 @@ SQLAlchemy는 새로운 속성과 relationship을 언제나 매핑에 추가할 
     ...     def __repr__(self):
     ...         return "<Address(email_address='%s')>" % self.email_address
 
-이제 user ``jack`` 을 로드할 때 (primary key로 로드하는 :meth:`~.Query.get`\ 를 사용했다),
-which loads by primary key), ``addresses`` 컬렉션에 대응하는 address를 제거하면
+이제 user ``jack`` 을 로드할 때 (기본 키로 로드하는 :meth:`~.Query.get`\ 를 사용했다),
+which loads by 기본 키), ``addresses`` 컬렉션에 대응하는 address를 제거하면
 ``Address``\ 도 제거되는 결과를 얻을 수 있다:
 
 .. sourcecode:: python+sql
 
-    # load Jack by primary key
+    # load Jack by 기본 키
     {sql}>>> jack = session.query(User).get(5)
     BEGIN (implicit)
     SELECT users.id AS users_id,
@@ -1948,7 +1959,7 @@ Building a Many To Many Relationship
 위에서, 다대다 relationship은 ``BlogPost.keywords``\ 이다. 다대다 relationship의
 기능을 정의하는 것은 ``secondary`` 키워드 인수이며 이 인수는 연결 테이블을 나타내는
 :class:`~sqlalchemy.schema.Table` 객체를 참조한다.
-이 테이블은 relationship의 양쪽을 참조하는 컬럼만 포함한다; 만약 자신의 primary key나 다른 테이블의 foreign key
+이 테이블은 relationship의 양쪽을 참조하는 컬럼만 포함한다; 만약 자신의 기본 키나 다른 테이블의 foreign key
 같은 다른 컬럼을 포함하고 있다면 SQLAlchemy는 "association object"라고 하는 다른 사용 패턴을 요구한다.
 이에 관해서는 :ref:`association_pattern`\ 에서 설명하고 있다.
 
@@ -1973,7 +1984,7 @@ Building a Many To Many Relationship
     CREATE TABLE keywords (
         id INTEGER NOT NULL,
         keyword VARCHAR(50) NOT NULL,
-        PRIMARY KEY (id),
+        기본 키 (id),
         UNIQUE (keyword)
     )
     ()
@@ -1983,7 +1994,7 @@ Building a Many To Many Relationship
         user_id INTEGER,
         headline VARCHAR(255) NOT NULL,
         body TEXT,
-        PRIMARY KEY (id),
+        기본 키 (id),
         FOREIGN KEY(user_id) REFERENCES users (id)
     )
     ()
@@ -1991,7 +2002,7 @@ Building a Many To Many Relationship
     CREATE TABLE post_keywords (
         post_id INTEGER NOT NULL,
         keyword_id INTEGER NOT NULL,
-        PRIMARY KEY (post_id, keyword_id),
+        기본 키 (post_id, keyword_id),
         FOREIGN KEY(post_id) REFERENCES posts (id),
         FOREIGN KEY(keyword_id) REFERENCES keywords (id)
     )
