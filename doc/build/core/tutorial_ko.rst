@@ -1929,9 +1929,6 @@ SET 절을 렌더링 할 때 :func:`.update` 구문의 기본 동작은
 
 이것은 MySQL에서, 개별 SET 절이 행단위 기준이 아니라 값단위 기준으로 완전하게 인식되고
 각 SET 절을 인식할 때마다 행에 포함된 값이 변경되기 때문이다.
-This because on MySQL, the individual SET clauses are fully evaluated on
-a per-value basis, as opposed to on a per-row basis, and as each SET clause
-is evaluated, the values embedded in the row are changing.
 
 이 특정 사용 케이스에 맞춰
 :paramref:`~sqlalchemy.sql.expression.update.preserve_parameter_order`
